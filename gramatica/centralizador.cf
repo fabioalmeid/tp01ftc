@@ -1,0 +1,18 @@
+ETask. Tarefa ::= Acao Alvo_Acao;
+EAction. Acao ::= Coletar Dados 
+                 | Aplicar Medicacao;
+ECollect. Coletar ::= "Iniciar Medicao"
+                      | "Parar medicao";
+EApply. Aplicar ::= "Liberar" 
+                    | "Cessar Liberacao";
+EData. Dados :: = "Temperatura"
+                  | "Hemoglobina"
+                  | "bilirrubina"
+                  | "Pressao Arterial"
+                  | Dados Operador Dados;
+EOp. Operador :: = "e";
+EMedic. Medicacao ::= Quantidade Remedio
+                     | Remedio;
+EQtde. Quantidade ::= Float;
+ERemedy. Remedio ::= "Dipirona"
+                    | "Paracetamol";
