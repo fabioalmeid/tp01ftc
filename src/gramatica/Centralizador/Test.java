@@ -1,7 +1,7 @@
 package gramatica.Centralizador;
 import gramatica.Centralizador.*;
 import gramatica.Centralizador.Absyn.*;
-import gramatica.Centralizador.java_cup.runtime.*;
+import gramatica.java_cup.runtime.*;
 
 import java.io.*;
 

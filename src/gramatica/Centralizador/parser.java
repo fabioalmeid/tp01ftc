@@ -10,13 +10,13 @@ package gramatica.Centralizador;
 /** CUP v0.10k generated parser.
   * @version Sat Sep 07 10:46:05 AMT 2013
   */
-public class parser extends gramatica.Centralizador.java_cup.runtime.lr_parser {
+public class parser extends gramatica.java_cup.runtime.lr_parser {
 
   /** Default constructor. */
   public parser() {super();}
 
   /** Constructor which sets the default scanner. */
-  public parser(gramatica.Centralizador.java_cup.runtime.Scanner s) {super(s);}
+  public parser(gramatica.java_cup.runtime.Scanner s) {super(s);}
 
   /** Production table. */
   protected static final short _production_table[][] = 
@@ -83,9 +83,9 @@ public class parser extends gramatica.Centralizador.java_cup.runtime.lr_parser {
     }
 
   /** Invoke a user supplied parse action. */
-  public gramatica.Centralizador.java_cup.runtime.Symbol do_action(
+  public gramatica.java_cup.runtime.Symbol do_action(
     int                        act_num,
-    gramatica.Centralizador.java_cup.runtime.lr_parser parser,
+    gramatica.java_cup.runtime.lr_parser parser,
     java.util.Stack            stack,
     int                        top)
     throws java.lang.Exception
@@ -109,18 +109,18 @@ public class parser extends gramatica.Centralizador.java_cup.runtime.lr_parser {
 
   public gramatica.Centralizador.Absyn.Tarefa pTarefa() throws Exception
   {
-	gramatica.Centralizador.java_cup.runtime.Symbol res = parse();
+	gramatica.java_cup.runtime.Symbol res = parse();
 	return (gramatica.Centralizador.Absyn.Tarefa) res.value;
   }
 
 public <B,A extends java.util.LinkedList<? super B>> A cons_(B x, A xs) { xs.addFirst(x); return xs; }
 
-public void syntax_error(gramatica.Centralizador.java_cup.runtime.Symbol cur_token)
+public void syntax_error(gramatica.java_cup.runtime.Symbol cur_token)
 {
 	report_error("Syntax Error, trying to recover and continue parse...", cur_token);
 }
 
-public void unrecovered_syntax_error(gramatica.Centralizador.java_cup.runtime.Symbol cur_token) throws java.lang.Exception
+public void unrecovered_syntax_error(gramatica.java_cup.runtime.Symbol cur_token) throws java.lang.Exception
 {
 	throw new Exception("Unrecoverable Syntax Error");
 }
@@ -138,15 +138,15 @@ class CUP$parser$actions {
   }
 
   /** Method with the actual generated action code. */
-  public final gramatica.Centralizador.java_cup.runtime.Symbol CUP$parser$do_action(
+  public final gramatica.java_cup.runtime.Symbol CUP$parser$do_action(
     int                        CUP$parser$act_num,
-    gramatica.Centralizador.java_cup.runtime.lr_parser CUP$parser$parser,
+    gramatica.java_cup.runtime.lr_parser CUP$parser$parser,
     java.util.Stack            CUP$parser$stack,
     int                        CUP$parser$top)
     throws java.lang.Exception
     {
       /* Symbol object for return from actions */
-      gramatica.Centralizador.java_cup.runtime.Symbol CUP$parser$result;
+      gramatica.java_cup.runtime.Symbol CUP$parser$result;
 
       /* select the action based on the action number */
       switch (CUP$parser$act_num)
@@ -156,7 +156,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Remedio RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.ERemedy2(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(9/*Remedio*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(9/*Remedio*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -165,7 +165,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Remedio RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.ERemedy1(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(9/*Remedio*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(9/*Remedio*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -173,9 +173,9 @@ class CUP$parser$actions {
           case 16: // Quantidade ::= _INTEGER_ 
             {
               gramatica.Centralizador.Absyn.Quantidade RESULT = null;
-		Integer p_1 = (Integer)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
+		Integer p_1 = (Integer)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
 		 RESULT = new gramatica.Centralizador.Absyn.EQtde1(p_1); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(8/*Quantidade*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(8/*Quantidade*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -183,9 +183,9 @@ class CUP$parser$actions {
           case 15: // Medicacao ::= Remedio 
             {
               gramatica.Centralizador.Absyn.Medicacao RESULT = null;
-		gramatica.Centralizador.Absyn.Remedio p_1 = (gramatica.Centralizador.Absyn.Remedio)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
+		gramatica.Centralizador.Absyn.Remedio p_1 = (gramatica.Centralizador.Absyn.Remedio)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
 		 RESULT = new gramatica.Centralizador.Absyn.EMedic2(p_1); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(7/*Medicacao*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(7/*Medicacao*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -193,10 +193,10 @@ class CUP$parser$actions {
           case 14: // Medicacao ::= Quantidade Remedio 
             {
               gramatica.Centralizador.Absyn.Medicacao RESULT = null;
-		gramatica.Centralizador.Absyn.Quantidade p_1 = (gramatica.Centralizador.Absyn.Quantidade)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		gramatica.Centralizador.Absyn.Remedio p_2 = (gramatica.Centralizador.Absyn.Remedio)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
+		gramatica.Centralizador.Absyn.Quantidade p_1 = (gramatica.Centralizador.Absyn.Quantidade)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		gramatica.Centralizador.Absyn.Remedio p_2 = (gramatica.Centralizador.Absyn.Remedio)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
 		 RESULT = new gramatica.Centralizador.Absyn.EMedic1(p_1,p_2); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(7/*Medicacao*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(7/*Medicacao*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -205,7 +205,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Operador RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.EOp(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(6/*Operador*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(6/*Operador*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -213,11 +213,11 @@ class CUP$parser$actions {
           case 12: // Dados ::= Dados Operador Dados 
             {
               gramatica.Centralizador.Absyn.Dados RESULT = null;
-		gramatica.Centralizador.Absyn.Dados p_1 = (gramatica.Centralizador.Absyn.Dados)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		gramatica.Centralizador.Absyn.Operador p_2 = (gramatica.Centralizador.Absyn.Operador)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		gramatica.Centralizador.Absyn.Dados p_3 = (gramatica.Centralizador.Absyn.Dados)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
+		gramatica.Centralizador.Absyn.Dados p_1 = (gramatica.Centralizador.Absyn.Dados)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		gramatica.Centralizador.Absyn.Operador p_2 = (gramatica.Centralizador.Absyn.Operador)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		gramatica.Centralizador.Absyn.Dados p_3 = (gramatica.Centralizador.Absyn.Dados)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
 		 RESULT = new gramatica.Centralizador.Absyn.EData5(p_1,p_2,p_3); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -226,7 +226,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Dados RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.EData4(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -235,7 +235,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Dados RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.EData3(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -244,7 +244,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Dados RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.EData2(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -253,7 +253,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Dados RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.EData1(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(5/*Dados*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -262,7 +262,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Aplicar RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.EApply2(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(4/*Aplicar*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(4/*Aplicar*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -271,7 +271,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Aplicar RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.EApply1(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(4/*Aplicar*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(4/*Aplicar*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -280,7 +280,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Coletar RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.ECollect2(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(3/*Coletar*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(3/*Coletar*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -289,7 +289,7 @@ class CUP$parser$actions {
             {
               gramatica.Centralizador.Absyn.Coletar RESULT = null;
 		 RESULT = new gramatica.Centralizador.Absyn.ECollect1(); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(3/*Coletar*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(3/*Coletar*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -297,10 +297,10 @@ class CUP$parser$actions {
           case 3: // Acao ::= Aplicar Medicacao 
             {
               gramatica.Centralizador.Absyn.Acao RESULT = null;
-		gramatica.Centralizador.Absyn.Aplicar p_1 = (gramatica.Centralizador.Absyn.Aplicar)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		gramatica.Centralizador.Absyn.Medicacao p_2 = (gramatica.Centralizador.Absyn.Medicacao)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
+		gramatica.Centralizador.Absyn.Aplicar p_1 = (gramatica.Centralizador.Absyn.Aplicar)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		gramatica.Centralizador.Absyn.Medicacao p_2 = (gramatica.Centralizador.Absyn.Medicacao)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
 		 RESULT = new gramatica.Centralizador.Absyn.EAction2(p_1,p_2); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(2/*Acao*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(2/*Acao*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -308,10 +308,10 @@ class CUP$parser$actions {
           case 2: // Acao ::= Coletar Dados 
             {
               gramatica.Centralizador.Absyn.Acao RESULT = null;
-		gramatica.Centralizador.Absyn.Coletar p_1 = (gramatica.Centralizador.Absyn.Coletar)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		gramatica.Centralizador.Absyn.Dados p_2 = (gramatica.Centralizador.Absyn.Dados)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
+		gramatica.Centralizador.Absyn.Coletar p_1 = (gramatica.Centralizador.Absyn.Coletar)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		gramatica.Centralizador.Absyn.Dados p_2 = (gramatica.Centralizador.Absyn.Dados)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
 		 RESULT = new gramatica.Centralizador.Absyn.EAction1(p_1,p_2); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(2/*Acao*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(2/*Acao*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -319,9 +319,9 @@ class CUP$parser$actions {
           case 1: // Tarefa ::= Acao 
             {
               gramatica.Centralizador.Absyn.Tarefa RESULT = null;
-		gramatica.Centralizador.Absyn.Acao p_1 = (gramatica.Centralizador.Absyn.Acao)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
+		gramatica.Centralizador.Absyn.Acao p_1 = (gramatica.Centralizador.Absyn.Acao)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-0)).value;
 		 RESULT = new gramatica.Centralizador.Absyn.ETask(p_1); 
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(1/*Tarefa*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(1/*Tarefa*/, RESULT);
             }
           return CUP$parser$result;
 
@@ -329,9 +329,9 @@ class CUP$parser$actions {
           case 0: // $START ::= Tarefa EOF 
             {
               Object RESULT = null;
-		gramatica.Centralizador.Absyn.Tarefa start_val = (gramatica.Centralizador.Absyn.Tarefa)((gramatica.Centralizador.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		gramatica.Centralizador.Absyn.Tarefa start_val = (gramatica.Centralizador.Absyn.Tarefa)((gramatica.java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		RESULT = start_val;
-              CUP$parser$result = new gramatica.Centralizador.java_cup.runtime.Symbol(0/*$START*/, RESULT);
+              CUP$parser$result = new gramatica.java_cup.runtime.Symbol(0/*$START*/, RESULT);
             }
           /* ACCEPT */
           CUP$parser$parser.done_parsing();
