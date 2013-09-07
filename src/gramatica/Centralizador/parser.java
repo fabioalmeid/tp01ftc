@@ -112,7 +112,7 @@ public class parser extends gramatica.java_cup.runtime.lr_parser {
 	gramatica.java_cup.runtime.Symbol res = parse();
 	return (gramatica.Centralizador.Absyn.Tarefa) res.value;
   }
-
+  
 public <B,A extends java.util.LinkedList<? super B>> A cons_(B x, A xs) { xs.addFirst(x); return xs; }
 
 public void syntax_error(gramatica.java_cup.runtime.Symbol cur_token)

@@ -1,18 +1,18 @@
-ETask. Tarefa ::= Acao Alvo_Acao;
-EAction. Acao ::= Coletar Dados 
-                 | Aplicar Medicacao;
-ECollect. Coletar ::= "Iniciar Medicao"
-                      | "Parar medicao";
-EApply. Aplicar ::= "Liberar" 
-                    | "Cessar Liberacao";
-EData. Dados :: = "Temperatura"
-                  | "Hemoglobina"
-                  | "bilirrubina"
-                  | "Pressao Arterial"
-                  | Dados Operador Dados;
-EOp. Operador :: = "e";
-EMedic. Medicacao ::= Quantidade Remedio
-                     | Remedio;
-EQtde. Quantidade ::= Float;
-ERemedy. Remedio ::= "Dipirona"
-                    | "Paracetamol";
+ETask. Tarefa ::= Acao;
+EAction1. Acao ::= Coletar Dados; 
+EAction2. Acao ::= Aplicar Medicacao;
+ECollect1. Coletar ::= "Iniciar Medicao";
+ECollect2. Coletar ::= "Parar medicao";
+EApply1. Aplicar ::= "Liberar"; 
+EApply2. Aplicar ::= "Cessar Liberacao";
+EData1. Dados ::= "Temperatura";
+EData2. Dados ::= "Hemoglobina";
+EData3. Dados ::= "bilirrubina";
+EData4. Dados ::= "Pressao Arterial";
+EData5. Dados ::= Dados Operador Dados;
+EOp. Operador ::= "e";
+EMedic1. Medicacao ::= Quantidade Remedio;
+EMedic2. Medicacao ::= Remedio;
+EQtde1. Quantidade ::= Integer;
+ERemedy1. Remedio ::= "Dipirona";
+ERemedy2. Remedio ::= "Paracetamol";
