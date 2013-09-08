@@ -3,6 +3,7 @@ package agentes;
 import gramatica.Centralizador.Interpreter;
 import gramatica.Centralizador.TransformIntoObject;
 import gramatica.Centralizador.VisitSkel;
+import gramatica.Centralizador.Visitante;
 import gramatica.Centralizador.Yylex;
 import gramatica.Centralizador.parser;
 
@@ -34,9 +35,13 @@ public class ExemploParserGramatica {
 		
 //		TransformIntoObject obj = new TransformIntoObject();
 //		obj.teste(p.pTarefa());
+		
+		Visitante vis = new Visitante();
+		p.pTarefa().accept(vis.new TarefaVisitor<>(), null);
+		TarefaCentralizador t = vis.getTarefa();		
 	
-		String resultado = Interpreter.interpret(p.pTarefa());
-	    System.out.println("Resultado: " + resultado);
+//		String resultado = Interpreter.interpret(p.pTarefa());
+//	    System.out.println("Resultado: " + resultado);
 
 //		Tarefa parse_tree = null;
 //		try {
