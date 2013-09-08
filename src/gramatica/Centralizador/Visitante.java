@@ -1,5 +1,6 @@
 package gramatica.Centralizador;
 
+import agentes.Medicamento;
 import agentes.TarefaCentralizador;
 import gramatica.Centralizador.Absyn.*;
 
@@ -84,24 +85,28 @@ public class Visitante {
 	public class DadosVisitor<R, A> implements Dados.Visitor<R, A> {
 		public R visit(gramatica.Centralizador.Absyn.EData1 p, A arg) {
 			/* Code For EData1 Goes Here */
+			tarefa.setDados(p);
 
 			return null;
 		}
 
 		public R visit(gramatica.Centralizador.Absyn.EData2 p, A arg) {
 			/* Code For EData2 Goes Here */
+			tarefa.setDados(p);
 
 			return null;
 		}
 
 		public R visit(gramatica.Centralizador.Absyn.EData3 p, A arg) {
 			/* Code For EData3 Goes Here */
+			tarefa.setDados(p);
 
 			return null;
 		}
 
 		public R visit(gramatica.Centralizador.Absyn.EData4 p, A arg) {
 			/* Code For EData4 Goes Here */
+			tarefa.setDados(p);
 
 			return null;
 		}
@@ -131,8 +136,13 @@ public class Visitante {
 		public R visit(gramatica.Centralizador.Absyn.EMedic1 p, A arg) {
 			/* Code For EMedic1 Goes Here */
 
-			p.quantidade_.accept(new QuantidadeVisitor<R, A>(), arg);
-			p.remedio_.accept(new RemedioVisitor<R, A>(), arg);
+			int qte = p.quantidade_.accept(new QuantidadeVisitor<R, A>(), arg);
+			Remedio o = p.remedio_.accept(new RemedioVisitor<R, A>(), arg);
+			
+			Medicamento med = new Medicamento();
+			med.quantidade = qte;
+			med.remedio = o;
+			tarefa.setMedicacao(med);
 
 			return null;
 		}
@@ -140,35 +150,40 @@ public class Visitante {
 		public R visit(gramatica.Centralizador.Absyn.EMedic2 p, A arg) {
 			/* Code For EMedic2 Goes Here */
 
-			p.remedio_.accept(new RemedioVisitor<R, A>(), arg);
+			Remedio o = p.remedio_.accept(new RemedioVisitor<R, A>(), arg);
+			
+			Medicamento med = new Medicamento();
+			med.quantidade = null;
+			med.remedio = o;
+			tarefa.setMedicacao(med);
 
 			return null;
 		}
 
 	}
 
-	public class QuantidadeVisitor<R, A> implements Quantidade.Visitor<R, A> {
-		public R visit(gramatica.Centralizador.Absyn.EQtde1 p, A arg) {
+	public class QuantidadeVisitor<R, A> implements Quantidade.Visitor<Integer, A> {
+		public Integer visit(gramatica.Centralizador.Absyn.EQtde1 p, A arg) {
 			/* Code For EQtde1 Goes Here */
 
 			// p.integer_;
 
-			return null;
+			return p.integer_;
 		}
 
 	}
 
-	public class RemedioVisitor<R, A> implements Remedio.Visitor<R, A> {
-		public R visit(gramatica.Centralizador.Absyn.ERemedy1 p, A arg) {
+	public class RemedioVisitor<R, A> implements Remedio.Visitor<Remedio, A> {
+		public ERemedy1 visit(gramatica.Centralizador.Absyn.ERemedy1 p, A arg) {
 			/* Code For ERemedy1 Goes Here */
 
-			return null;
+			return p;
 		}
 
-		public R visit(gramatica.Centralizador.Absyn.ERemedy2 p, A arg) {
+		public ERemedy2 visit(gramatica.Centralizador.Absyn.ERemedy2 p, A arg) {
 			/* Code For ERemedy2 Goes Here */
 
-			return null;
+			return p;
 		}
 
 	}
