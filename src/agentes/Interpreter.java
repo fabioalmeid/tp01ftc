@@ -9,10 +9,10 @@
 //	}
 //
 //	private static Integer interpretExp(Tarefa e, Object o) {
-//		return e.accept(new IntTarefa(), null);
+//		return e.accept(new kct(), null);
 //	}
 //
-//	private static class IntTarefa implements Tarefa.Visitor<ETask,Object> {
+//	private static class kct implements Tarefa.Visitor<ETask,Object> {
 //
 //		public Acao.Visitor<ETask, Object> visit(EAction1 p, Object o) {
 //
