@@ -1,20 +1,19 @@
 package agentes;
 
-import gramatica.Centralizador.PrettyPrinter;
+import gramatica.Centralizador.Interpreter;
+import gramatica.Centralizador.TransformIntoObject;
+import gramatica.Centralizador.VisitSkel;
 import gramatica.Centralizador.Yylex;
 import gramatica.Centralizador.parser;
-import gramatica.Centralizador.Absyn.Tarefa;
-import gramatica.Centralizador.Absyn.Acao;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class ExemploParserGramatica {
 	public static void main(String args[]) throws Exception {
-		String str = "Iniciar Medicao Temperatura";
+		//String str = "Iniciar Medicao Temperatura";
 		//String str = "Iniciar Monitoramento Temperatura";
+		String str = "Liberar Dipirona";
 
 		// convert String into InputStream
 		InputStream is = new ByteArrayInputStream(str.getBytes());
@@ -32,15 +31,21 @@ public class ExemploParserGramatica {
 		Yylex linguagem = new Yylex(is);
 
 		parser p = new parser(linguagem);
-
-		Tarefa parse_tree = null;
-		try {
-			parse_tree = p.pTarefa();
-		} catch (Error e) {
-			throw new Exception("String '" + str + "' nao pertence a linguagem. Erro: " + e.getMessage());
-		}
 		
-		System.out.println(PrettyPrinter.print(parse_tree));
+//		TransformIntoObject obj = new TransformIntoObject();
+//		obj.teste(p.pTarefa());
+	
+		String resultado = Interpreter.interpret(p.pTarefa());
+	    System.out.println("Resultado: " + resultado);
+
+//		Tarefa parse_tree = null;
+//		try {
+//			parse_tree = p.pTarefa();
+//		} catch (Error e) {
+//			throw new Exception("String '" + str + "' nao pertence a linguagem. Erro: " + e.getMessage());
+//		}
+//		
+//		System.out.println(PrettyPrinter.print(parse_tree));
 
 		System.out.println("acabou");
 
