@@ -1,5 +1,6 @@
 package agentes;
 
+import util.Actions;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -24,7 +25,7 @@ public class Centralizador extends Agent {
 
 	private boolean startMeasure = true;
 	
-	private int AgentsNumber;
+	private final int  AGENTSNUMBER = 1;
 
 	public void setup() {
 		// Printout a welcome message
@@ -33,23 +34,15 @@ public class Centralizador extends Agent {
 
 		// create agent t1 on the same container of the creator agent
 		AgentContainer container = (AgentContainer) getContainerController(); 
-
-//		monitorName = "monitor" + Integer.toString(++monitorCont);
-//		CreatNewAgent(container, monitorName, "teste.AgenteMonitor");
-//
-//		atuadorName = "atuador" + Integer.toString(++atuadorCont);
-//		CreatNewAgent(container, atuadorName, "teste.AgenteAtuador");
 		
-		AgentsNumber = 10;
-		
-		for (int i = 0; i < AgentsNumber; i++) {
+		for (int i = 0; i < AGENTSNUMBER; i++) {
 			// create MONITOR			
 			monitorName = "monitor" + Integer.toString(++monitorCont);
-			CreatNewAgent(container, monitorName, "teste.AgenteMonitor");
+			CreatNewAgent(container, monitorName, "agentes.AgenteMonitor");
 			
 			// create ATUADOR
 			atuadorName = "atuador" + Integer.toString(++atuadorCont);
-			CreatNewAgent(container, atuadorName, "teste.AgenteAtuador");
+			CreatNewAgent(container, atuadorName, "agentes.AgenteAtuador");
 		}
 
 		// minute
@@ -82,7 +75,7 @@ public class Centralizador extends Agent {
 						System.out.println("**********************");
 						System.out.println();
 					}*/
-					for (int i = 1; i <= AgentsNumber; i++) {
+					for (int i = 1; i <= AGENTSNUMBER; i++) {
 						sendMsgToMonitor("TEMPERATURA", 40,"monitor"+i );
 //						sendMsgToAtuador();	
 						
@@ -124,15 +117,29 @@ public class Centralizador extends Agent {
 
 	}
 
-	private void defineAction() {
+	private String defineMonitorAction(int switchCaseLenght) {
+		int indexMsg = (int) (Math.random() * switchCaseLenght);
+		String msgSelected = null;
+		switch (indexMsg) {
+		case 0:
+			msgSelected = Actions.INICIAR_LEITURA_TEMPERATURA_MONITOR;
+			break;
+		case 1:
+			msgSelected = Actions.INICIAR_LEITURA_HEMOGRAMA_MONITOR;
+			break;
+
+		}
+		return msgSelected;
 
 	}
 
 	private void sendMsgToMonitor(String action, int currentValue, String agentName) {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
-		message.setContent(action + "_" + currentValue);
-		System.out.println(agentName + " faz alguma coisa ai MONITTOR!!!");
+		String currentMsg = defineMonitorAction(2);
+//		message.setContent( currentMsg + "_" + currentValue);
+		message.setContent(currentMsg);
+		System.out.println(agentName + " " + currentMsg);
 		// System.out.println("To enviando uma mensagem...");
 		send(message);
 	}

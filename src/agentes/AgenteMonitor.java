@@ -1,5 +1,7 @@
 package agentes;
 
+import util.Actions;
+import util.ParseGrammar;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -8,9 +10,9 @@ import jade.lang.acl.MessageTemplate;
 public class AgenteMonitor extends Agent {
 
 	private static final long serialVersionUID = 1L;
-	
-	private String msgtoSend, currentAction;
-	
+
+	private String currentAction;
+
 	private int currentDegree, currentIndex;
 
 	protected void setup() {
@@ -25,56 +27,94 @@ public class AgenteMonitor extends Agent {
 
 			@Override
 			public void action() {
-//				blockingReceive();
-				ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
-				if (msg != null) {
-//					System.out.println("Recebi mensagem de " + msg.getSender());
-//					System.out.println("Conteudo : " + msg.getContent());
-					
-//					if((msg.getContent().toString().contains("true"))){
-//						currentDegree = 40;
-//					}
-						
-						if((msg.getContent().toString().contains("TEMPERATURA")) )  // deifineAction
-							currentAction = "TEMPERATURA";
-							currentIndex = msg.getContent().toString().indexOf('_');
-							currentDegree = Integer.valueOf(msg.getContent().toString().substring(
-												++currentIndex, msg.getContent().toString().length()));
-					
-						sendMsgtoCentralizador(msg, currentAction, currentDegree);
-					} 
-								
-					
+				// blockingReceive();
+				ACLMessage ACLmsg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+				if (ACLmsg != null) {
+					// System.out.println("Recebi mensagem de " +
+					// msg.getSender());
+					// System.out.println("Conteudo : " + msg.getContent());
+
+					// if((msg.getContent().toString().contains("true"))){
+					// currentDegree = 40;
+					// }
+					/*
+					 * if((msg.getContent().toString().contains("TEMPERATURA"))
+					 * ) // defineAction currentAction = "TEMPERATURA";
+					 * currentIndex = msg.getContent().toString().indexOf('_');
+					 * currentDegree =
+					 * Integer.valueOf(msg.getContent().toString().substring(
+					 * ++currentIndex, msg.getContent().toString().length()));
+					 */
+
+					if (ParseGrammar.validateSentence(ACLmsg.getContent().toString())) {
+						System.out.println("ParseGramma  TRUE" );
+						defineAction(ACLmsg,ACLmsg.getContent().toString());
+//						sendMsgtoCentralizador(msg, currentAction, currentDegree);
+					} else {
+						System.out.println("FALSE");
+					}
+
+/*					System.out.println(ParseGrammar.validateSentence(msg.getContent().toString()));*/
+//					System.out.println(msg.getContent().toString());
+//					System.out.println(ParseGrammar.validateSentence(msg.getContent().toString()));
 				}
-			
+
+			}
+
 		});
 	}
-		
-	private void sendMsgtoCentralizador(ACLMessage msg, String action, int currentNumber) {
+
+	private void sendMsgtoCentralizador(ACLMessage msg, String msgToSend) {
 		ACLMessage replica = msg.createReply();
 		replica.setPerformative(ACLMessage.INFORM);
-		currentNumber = defineNumber(currentNumber);
-//		msgtoSend = "A " +action+ " �s 16:00: " + Integer.toString(currentNumber) + Integer.toString(currentNumber).length();
-		
-		msgtoSend = "A " +action+ " �s 16:00: " + Integer.toString(currentNumber);
-		
-		replica.setContent(msgtoSend);
+//		currentNumber = defineNumber(currentNumber);
+//
+//		msgtoSend = "A " + action + "16:00: "+ Integer.toString(currentNumber);
+
+		replica.setContent(msgToSend);
 		send(replica);
 
 	}
-	
-	private int defineNumber(int max){
-		return (int) (Math.random()* max);
+
+	private int randomNumber(int max) {
+		return (int) (Math.random() * max);
 	}
 	
-	private String defineAction(){
+	private void generateTempMSG(ACLMessage ACLmsg,int currentDegree){
+		String 	msgtoSend  ;
+		
+		msgtoSend =  "A " + "TEMPERATURA"+ " as 16:00: "+ Integer.toString(randomNumber(currentDegree)) + "C";  // DEFINIR MELHOR A ACTION(TEMPERATURA) E horario(random)
+		sendMsgtoCentralizador(ACLmsg, msgtoSend);
+		
+	}
+	
+	private void generateDiseasesMSG(ACLMessage ACLmsg,int currentDegree){
+		String 	msgtoSend  ;
+		
+		msgtoSend =  "A " + "Hemoglobina"+ " as 16:00: "+ Integer.toString(randomNumber(currentDegree)) + "g/dL";  // DEFINIR MELHOR A ACTION(hemoglobina) E horario(random)
+		sendMsgtoCentralizador(ACLmsg, msgtoSend);
+		
+	}
+
+	private String defineAction(ACLMessage ACLmsg, String msgReceived) {
+
+		if (msgReceived.contains(Actions.INICIAR_LEITURA_TEMPERATURA_MONITOR)) {
+			
+			 generateTempMSG(ACLmsg, 40);  // DEFENI CURRENT DEGREE 
+
+		} else if (msgReceived.contains(Actions.INICIAR_LEITURA_HEMOGRAMA_MONITOR)) {
+			generateDiseasesMSG(ACLmsg, 14);  // DEFENI CURRENT DEGREE 
+		}
+		else if (msgReceived.contains(Actions.PARAR_LEITURA_TEMPERATURA_MONITOR)) {}  
+		else if (msgReceived.contains(Actions.PARAR_LEITURA_HEMOGRAMA_MONITOR)) {}  /// OTHRES/// OTHRES
+
 		return currentAction;
-		
+
 	}
-	
-	private int getIndex(String sentence){
+
+	private int getIndex(String sentence) {
 		return currentDegree;
-		
+
 	}
 
 }
