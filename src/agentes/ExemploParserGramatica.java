@@ -1,59 +1,92 @@
 package agentes;
 
-import gramatica.Centralizador.Interpreter;
-import gramatica.Centralizador.TransformIntoObject;
-import gramatica.Centralizador.VisitSkel;
-import gramatica.Centralizador.Visitante;
-import gramatica.Centralizador.Yylex;
-import gramatica.Centralizador.parser;
+import gramatica.Centralizador.Absyn.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExemploParserGramatica {
 	public static void main(String args[]) throws Exception {
-		//String str = "Iniciar Medicao Temperatura";
-		//String str = "Iniciar Monitoramento Temperatura";
-		String str = "Liberar Dipirona";
-
-		// convert String into InputStream
-		InputStream is = new ByteArrayInputStream(str.getBytes());
-		// read it with BufferedReader
-//		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-//
-//		String line;
-//		System.out.print("String de entrada: ");
-//		while ((line = br.readLine()) != null) {
-//			System.out.println(line);
-//		}
-//
-//		br.close();
-
-		Yylex linguagem = new Yylex(is);
-
-		parser p = new parser(linguagem);
+		List<String> mensagens = new ArrayList<String>();
 		
-//		TransformIntoObject obj = new TransformIntoObject();
-//		obj.teste(p.pTarefa());
-		
-		Visitante vis = new Visitante();
-		p.pTarefa().accept(vis.new TarefaVisitor<>(), null);
-		TarefaCentralizador t = vis.getTarefa();		
-	
-//		String resultado = Interpreter.interpret(p.pTarefa());
-//	    System.out.println("Resultado: " + resultado);
+		// todas mensagens corretas - Simulacao de envio do centralizador
+		mensagens.add("Iniciar Medicao Temperatura");
+		mensagens.add("Iniciar Medicao Hemoglobina");
+		mensagens.add("Iniciar Medicao bilirrubina");
+		mensagens.add("Iniciar Medicao Temperatura e Hemoglobina");
+		mensagens.add("Iniciar Medicao Hemoglobina e bilirrubina e Temperatura");
+		mensagens.add("Parar medicao Temperatura");
+		mensagens.add("Parar medicao bilirrubina");
+		mensagens.add("Parar medicao Temperatura e bilirrubina");
+		mensagens.add("Liberar Dipirona");
+		mensagens.add("Liberar Paracetamol");
+		mensagens.add("Liberar 8 Dipirona");
+		mensagens.add("Liberar 6 Paracetamol");
+		mensagens.add("Cessar Liberacao Dipirona");
+		mensagens.add("Cessar Liberacao Paracetamol");		
 
-//		Tarefa parse_tree = null;
-//		try {
-//			parse_tree = p.pTarefa();
-//		} catch (Error e) {
-//			throw new Exception("String '" + str + "' nao pertence a linguagem. Erro: " + e.getMessage());
-//		}
-//		
-//		System.out.println(PrettyPrinter.print(parse_tree));
+		for (String s : mensagens) {
+			System.out.println("mensagem recebida do centralizador: " + s);
+			TarefaCentralizador t;
+			try { // simula o monitor recebendo e validando a mensagem
+				TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(s);
+				if (tc.getAcao() instanceof ECollect1) { // veja na gramatica o que significa ECollect1
+					System.out.print("Iniciando a medicacao");
+					List<Object> dados = tc.getDados();
+					ImprimeDados(dados);
+				}
+				else if (tc.getAcao() instanceof ECollect2) {
+					System.out.print("Parando medicao");
+					List<Object> dados = tc.getDados();
+					ImprimeDados(dados);
+				}
+				else if (tc.getAcao() instanceof EApply1) {
+					System.out.print("Liberando medicacao");
+					List<Medicamento> med = tc.getMedicacao();
+					ImprimeMedicacao(med);
+				}
+				else if (tc.getAcao() instanceof EApply2){
+					System.out.print("Cessando liberacao da medicacao");
+					List<Medicamento> med = tc.getMedicacao();
+					ImprimeMedicacao(med);
+					}
+				System.out.println("\n-------------------");	
+			} catch (Exception e){
+				System.out.println(e.getMessage());
+			}						
+		}
 
 		System.out.println("acabou");
 
+	}
+	
+	public static void ImprimeDados(List<Object> dados) {
+		for (Object o : dados){
+			if (o instanceof EData1)
+				System.out.print(" Temperatura");
+			else if (o instanceof EData2)
+				System.out.print(" Hemoglobina");
+			else if (o instanceof EData3)
+				System.out.print(" bilirrubina");
+			else if (o instanceof EData4)
+				System.out.print(" Pressao Arterial");
+		}
+	}
+	
+	public static void ImprimeMedicacao(List<Medicamento> med) {
+		for (Medicamento m : med) {
+			if (m.remedio instanceof ERemedy1) {
+				if (m.quantidade != null)
+					System.out.print(" " + String.valueOf(m.quantidade) + " Dipirona");
+				else
+					System.out.print(" Dipirona");
+			} else if (m.remedio instanceof ERemedy2) {
+				if (m.quantidade != null)
+					System.out.print(" " + String.valueOf(m.quantidade)+ " Paracetamol");
+				else
+					System.out.print(" Paracetamol");
+			}
+		}
 	}
 
 }
