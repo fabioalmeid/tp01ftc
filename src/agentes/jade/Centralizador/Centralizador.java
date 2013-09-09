@@ -91,6 +91,7 @@ public class Centralizador extends Agent {
 					}
 					else if (atuadores.contains(sender))
 						System.out.println("Msg recebida do atuador " + msg.getSender().getLocalName() + " -->" + msg.getContent());
+					else System.out.println("ERRO: Mensagem recebida do desconhecido");
 
 //					defineAction(Integer.valueOf(msg.getContent().substring(
 //							index, msg.getContent().toString().length())), msg
