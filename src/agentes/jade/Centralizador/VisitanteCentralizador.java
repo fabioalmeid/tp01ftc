@@ -1,10 +1,8 @@
-package gramatica.Centralizador;
+package agentes.jade.Centralizador;
 
-import agentes.Medicamento;
-import agentes.TarefaCentralizador;
 import gramatica.Centralizador.Absyn.*;
 
-public class Visitante {
+public class VisitanteCentralizador {
 	public TarefaCentralizador tarefa;
 	
 	public TarefaCentralizador getTarefa() {

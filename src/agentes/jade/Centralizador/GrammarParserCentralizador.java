@@ -1,11 +1,13 @@
-package agentes;
+package agentes.jade.Centralizador;
 
-import gramatica.Centralizador.Visitante;
 import gramatica.Centralizador.Yylex;
 import gramatica.Centralizador.parser;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
+
 
 public class GrammarParserCentralizador {
 	
@@ -18,7 +20,7 @@ public class GrammarParserCentralizador {
 
 		parser p = new parser(linguagem);
 		try {
-			Visitante vis = new Visitante();
+			VisitanteCentralizador vis = new VisitanteCentralizador();
 			p.pTarefa().accept(vis.new TarefaVisitor<>(), null);
 			tarefaObject = vis.getTarefa();
 		} catch (Error e) {

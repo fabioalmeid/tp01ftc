@@ -1,7 +1,9 @@
-package agentes;
+package agentes.jade.Centralizador;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class TarefaCentralizador {
 	private Object acao; 

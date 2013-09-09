@@ -1,11 +1,15 @@
-package agentes;
+package agentes.jade.Centralizador;
 
 import gramatica.Centralizador.Absyn.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExemploParserGramatica {
+
+
+
+public class ExemploParserGramaticaCentralizador {
 	public static void main(String args[]) throws Exception {
 		List<String> mensagens = new ArrayList<String>();
 		
