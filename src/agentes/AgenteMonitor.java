@@ -1,11 +1,16 @@
 package agentes;
 
-import util.Actions;
-import util.ParseGrammar;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import util.Actions;
+import util.ParseGrammar;
 
 public class AgenteMonitor extends Agent {
 
@@ -15,11 +20,9 @@ public class AgenteMonitor extends Agent {
 
 	private int currentDegree, currentIndex;
 
+	private ACLMessage ACLmsg;
+
 	protected void setup() {
-		/*
-		 * System.out.println(getLocalName() + " set up"); addBehaviour(new
-		 * MessageResponderBehaviour(this));
-		 */
 
 		addBehaviour(new CyclicBehaviour(this) {
 
@@ -28,35 +31,22 @@ public class AgenteMonitor extends Agent {
 			@Override
 			public void action() {
 				// blockingReceive();
-				ACLMessage ACLmsg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+				ACLmsg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+
 				if (ACLmsg != null) {
-					// System.out.println("Recebi mensagem de " +
-					// msg.getSender());
-					// System.out.println("Conteudo : " + msg.getContent());
 
-					// if((msg.getContent().toString().contains("true"))){
-					// currentDegree = 40;
-					// }
-					/*
-					 * if((msg.getContent().toString().contains("TEMPERATURA"))
-					 * ) // defineAction currentAction = "TEMPERATURA";
-					 * currentIndex = msg.getContent().toString().indexOf('_');
-					 * currentDegree =
-					 * Integer.valueOf(msg.getContent().toString().substring(
-					 * ++currentIndex, msg.getContent().toString().length()));
-					 */
+					if (ParseGrammar.validateSentence(ACLmsg.getContent().toString())) { // GRAMMAR validation
+						System.out.println("ParseGramma  TRUE");
 
-					if (ParseGrammar.validateSentence(ACLmsg.getContent().toString())) {
-						System.out.println("ParseGramma  TRUE" );
-						defineAction(ACLmsg,ACLmsg.getContent().toString());
-//						sendMsgtoCentralizador(msg, currentAction, currentDegree);
+						if (ACLmsg.getContent().toString().contains(Actions.INICIAR_LEITURA_TEMPERATURA_MONITOR)) {
+							addBehaviour(new InformTempBehaviour(myAgent,ACLmsg));
+						}
+						// OTHERS
+
 					} else {
 						System.out.println("FALSE");
 					}
 
-/*					System.out.println(ParseGrammar.validateSentence(msg.getContent().toString()));*/
-//					System.out.println(msg.getContent().toString());
-//					System.out.println(ParseGrammar.validateSentence(msg.getContent().toString()));
 				}
 
 			}
@@ -71,6 +61,7 @@ public class AgenteMonitor extends Agent {
 //
 //		msgtoSend = "A " + action + "16:00: "+ Integer.toString(currentNumber);
 
+		System.out.println("msg enviada vy monitor " + msgToSend );
 		replica.setContent(msgToSend);
 		send(replica);
 
@@ -80,23 +71,52 @@ public class AgenteMonitor extends Agent {
 		return (int) (Math.random() * max);
 	}
 	
-	private void generateTempMSG(ACLMessage ACLmsg,int currentDegree){
+	private void generateTempMSG(ACLMessage ACLmsg,int previousDegree){
 		String 	msgtoSend  ;
+		int currentDegree = randomNumber(previousDegree);
 		
-		msgtoSend =  "A " + "TEMPERATURA"+ " as 16:00: "+ Integer.toString(randomNumber(currentDegree)) + "C";  // DEFINIR MELHOR A ACTION(TEMPERATURA) E horario(random)
+		msgtoSend =  "A " + "TEMPERATURA"+ " as "+  getCurrentTime() + ": "+ Integer.toString(currentDegree) + "C    " + " |" + Integer.toString(currentDegree) ;  // DEFINIR MELHOR A ACTION(TEMPERATURA) E horario(random)
+		System.out.println("msgtoSend  >>>>> "  +  msgtoSend);
 		sendMsgtoCentralizador(ACLmsg, msgtoSend);
 		
 	}
 	
+	private String getCurrentTime(){
+	
+    	return new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+ 
+	}
+
 	private void generateDiseasesMSG(ACLMessage ACLmsg,int currentDegree){
 		String 	msgtoSend  ;
 		
-		msgtoSend =  "A " + "Hemoglobina"+ " as 16:00: "+ Integer.toString(randomNumber(currentDegree)) + "g/dL";  // DEFINIR MELHOR A ACTION(hemoglobina) E horario(random)
+		msgtoSend =  "A " + "Hemoglobina"+ " as "+  getCurrentTime() + ": "+ Integer.toString(randomNumber(currentDegree)) + "g/dL";  // DEFINIR MELHOR A ACTION(hemoglobina) E horario(random)
 		sendMsgtoCentralizador(ACLmsg, msgtoSend);
 		
 	}
 
-	private String defineAction(ACLMessage ACLmsg, String msgReceived) {
+	
+	// MONITOR informs to Centralizador a given temperature at each 2s
+	class InformTempBehaviour extends TickerBehaviour {
+		private static final long serialVersionUID = 1L;
+
+		private ACLMessage aclMessage;
+
+		public InformTempBehaviour(Agent a, ACLMessage aclMessage) {
+			super(a, 2000);
+			this.aclMessage = aclMessage;
+			System.out.println("aclMessage********************************"+ aclMessage);
+		}
+
+		@Override
+		protected void onTick() {
+
+			generateTempMSG(aclMessage, 40);  // get CurrentDegree
+
+		}
+	}
+	
+/*	private String defineAction(ACLMessage ACLmsg, String msgReceived) {
 
 		if (msgReceived.contains(Actions.INICIAR_LEITURA_TEMPERATURA_MONITOR)) {
 			
@@ -115,6 +135,6 @@ public class AgenteMonitor extends Agent {
 	private int getIndex(String sentence) {
 		return currentDegree;
 
-	}
+	}*/
 
 }
