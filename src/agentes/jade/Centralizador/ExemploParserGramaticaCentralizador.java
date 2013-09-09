@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExemploParserGramaticaCentralizador {
-	public static void main(String args[]) throws Exception {
+	public static void main(String args[]) {
 		List<String> mensagens = new ArrayList<String>();
 		
 		// todas mensagens corretas - Simulacao de envio do centralizador

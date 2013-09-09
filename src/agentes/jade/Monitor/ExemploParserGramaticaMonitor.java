@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ExemploParserGramaticaMonitor {
 	
-	public static void main(String args[]) throws Exception {
+	public static void main(String args[]) {
 		String mens = "Temperatura de 37 C as 05 h: 30 m";
 		
 		// exemplo de como realizar get nos dados
