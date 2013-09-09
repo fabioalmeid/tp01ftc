@@ -1,9 +1,6 @@
 package gramatica.Centralizador;
-import gramatica.Centralizador.*;
-import gramatica.Centralizador.Absyn.*;
-import gramatica.java_cup.runtime.*;
-
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class Test
 {

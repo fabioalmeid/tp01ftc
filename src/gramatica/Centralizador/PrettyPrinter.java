@@ -1,5 +1,4 @@
 package gramatica.Centralizador;
-import gramatica.Centralizador.Absyn.*;
 
 public class PrettyPrinter
 {

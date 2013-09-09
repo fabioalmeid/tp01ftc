@@ -29,7 +29,7 @@ public class Centralizador extends Agent {
 
 	public void setup() {
 		// Printout a welcome message
-		System.out.println("Eita porra , sou o agente " + getAID().getName()
+		System.out.println("Eita, sou o agente " + getAID().getName()
 				+ " e estou pronto.");
 
 		// create agent t1 on the same container of the creator agent
