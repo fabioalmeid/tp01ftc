@@ -1,13 +1,8 @@
 package agentes.jade.Centralizador;
 
 import gramatica.Centralizador.Absyn.*;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 
 public class ExemploParserGramaticaCentralizador {
 	public static void main(String args[]) throws Exception {
@@ -31,7 +26,6 @@ public class ExemploParserGramaticaCentralizador {
 
 		for (String s : mensagens) {
 			System.out.println("mensagem recebida do centralizador: " + s);
-			TarefaCentralizador t;
 			try { // simula o monitor recebendo e validando a mensagem
 				TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(s);
 				if (tc.getAcao() instanceof ECollect1) { // veja na gramatica o que significa ECollect1

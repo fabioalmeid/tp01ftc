@@ -12,7 +12,7 @@ import java.util.List;
 public class ExemploParserGramaticaMonitor {
 	
 	public static void main(String args[]) throws Exception {
-		String mens = "Bilirrubina 1000 g/dL as 14 h: 01 m e Hemoglobina 900 mg/dL as 14 h: 01 m";
+		String mens = "Temperatura de 37 C as 05 h: 30 m";
 		
 		// exemplo de como realizar get nos dados
 		TarefaMonitor tm = new TarefaMonitor();
@@ -22,13 +22,14 @@ public class ExemploParserGramaticaMonitor {
 			for (Afericao af : listaAF) {
 				if (af.getDado() instanceof EDados){ // veja gramatica para EDados
 					System.out.print("Temperatura ");
-					System.out.print(String.valueOf(af.getQuantidade1()) + "C");
+					System.out.print(String.valueOf(af.getQuantidade1()) + " C");
 				}
 			}
+			System.out.println("\n-------------------");
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 		}
-		System.out.println("\n-------------------");
+		
 		
 		// agora testando com mais mensagens
 		List<String> mensagens = new ArrayList<String>();
