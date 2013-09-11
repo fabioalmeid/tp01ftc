@@ -19,15 +19,11 @@ public class Paciente {
 	private static Integer bilirrubina = 3;
 	private static Boolean remedioBilirrubuna = false;
 	
-	private static Integer pressao = 0;
 	private static Boolean remedioPressao = false;
-	
-	public static Integer getPressao() {
-		return pressao;
-	}
 
-	public static void setPressao(Integer _pressao) {
-		pressao = _pressao;
+	public static void setPressao(Integer diast, Integer sist) {
+		PressaoArterial.setSist(sist);
+		PressaoArterial.setDiast(diast);
 	}
 	
 	public static Integer getHemoglobina() {

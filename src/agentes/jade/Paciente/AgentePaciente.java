@@ -85,13 +85,13 @@ public class AgentePaciente extends Agent {
 							List<Object> dados = tc.getDados();
 							for (Object o : dados) {
 								if (o instanceof EData1)
-									resposta = resposta	+ String.valueOf(Paciente.getTemperatura()) + ";";
+									resposta = resposta	+ String.valueOf(Paciente.getTemperatura());
 								else if (o instanceof EData2)
-									resposta = resposta + String.valueOf(Paciente.getHemoglobina()) + ";";
+									resposta = resposta + String.valueOf(Paciente.getHemoglobina());
 								else if (o instanceof EData3)
-									resposta = resposta + String.valueOf(Paciente.getBilirrubina()) + ";";
+									resposta = resposta + String.valueOf(Paciente.getBilirrubina());
 								else if (o instanceof EData4)
-									resposta = resposta + String.valueOf(Paciente.getPressao()) + ";";
+									resposta = resposta + String.valueOf(PressaoArterial.getPressao());
 							}
 						} else if (tc.getAcao() instanceof EApply1) { // EApply1. Aplicar ::= "Liberar"; 
 							List<Medicamento> med = tc.getMedicacao();
@@ -223,6 +223,30 @@ public class AgentePaciente extends Agent {
 				ticks++;
 				if (ticks >= MAX_TICKS_UNCHANGED) {
 					Paciente.setHemoglobina(randomBilirrubina());
+					ticks = 0;
+				}
+			}
+			
+		}
+	}
+	
+	class UpdatePressaoBehaviour extends TickerBehaviour {
+		int ticks = 0;
+		
+		public UpdatePressaoBehaviour(Agent a, long period) {
+			super(a, period);
+		}
+
+		@Override
+		protected void onTick() {
+			if (Paciente.getRemedioPressao()) { // tem remedio para temperatura
+				// decrementa temperatura a cada ticks
+				PressaoArterial.setPressaoBoa();
+				ticks = 0;				
+			} else {
+				ticks++;
+				if (ticks >= MAX_TICKS_UNCHANGED) {
+					PressaoArterial.setPressaoRandom();
 					ticks = 0;
 				}
 			}
