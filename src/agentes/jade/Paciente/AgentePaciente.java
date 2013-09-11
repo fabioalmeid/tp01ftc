@@ -23,6 +23,7 @@ import jade.lang.acl.MessageTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import agentes.UpdateAgentList;
 import agentes.jade.Centralizador.GrammarParserCentralizador;
 import agentes.jade.Centralizador.Medicamento;
 import agentes.jade.Centralizador.TarefaCentralizador;
@@ -266,42 +267,19 @@ public class AgentePaciente extends Agent {
 
 		@Override
 		protected void onTick() {
-			// atualiza de tempos em tempos lista de agentes
-			// Atualiza lista de monitores
-			DFAgentDescription template = new DFAgentDescription();
-			ServiceDescription sd = new ServiceDescription();
-			sd.setType("monitor");
-			template.addServices(sd);
-			try {
-				DFAgentDescription[] result = DFService.search(myAgent,template);
-				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
-				monitor = new ArrayList<AID>();
-				for (int i = 0; i < result.length; ++i) {
-					monitor.add(result[i].getName());
-					System.out.print(" | " + monitor.get(i).getLocalName());
-				}
-				System.out.println();
-			} catch (FIPAException fe) {
-				fe.printStackTrace();
+			monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
+			System.out.print(getLocalName() + ": Achei os seguintes monitores:");
+			for (AID m : monitor) {
+				System.out.print(" | " + m.getLocalName());
 			}
-
-			// Atualiza lista de atuadores
-			DFAgentDescription template2 = new DFAgentDescription();
-			ServiceDescription sd2 = new ServiceDescription();
-			sd2.setType("atuador");
-			template2.addServices(sd2);
-			try {
-				DFAgentDescription[] result2 = DFService.search(myAgent, template2);
-				System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
-				atuador = new ArrayList<AID>();
-				for (int i = 0; i < result2.length; ++i) {
-					atuador.add(result2[i].getName());
-					System.out.print(" | " + atuador.get(i).getLocalName());
-				}
-				System.out.println();
-			} catch (FIPAException fe) {
-				fe.printStackTrace();
+			System.out.println();
+			
+			atuador = UpdateAgentList.getAgentUpdatedList("atuador", myAgent);
+			System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
+			for (AID a : atuador) {
+				System.out.print(" | " + a.getLocalName());
 			}
+			System.out.println();
 		}
 	}
 }

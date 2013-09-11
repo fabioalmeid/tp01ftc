@@ -11,17 +11,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VisitanteMonitor {
-	private List<Afericao> afericoes = new ArrayList<Afericao>();
+	/*
+ArrayList<ArrayList<String>> listOlists = new ArrayList<ArrayList<String>>();
+ArrayList<String> singleList = new ArrayList<String>();
+singleList.add("hello");
+singleList.add("world");
+listOlists.add(singleList);
 
-	public List<Afericao> getAfericoes() {
-		return afericoes;
+ArrayList<String> anotherList = new ArrayList<String>();
+anotherList.add("this is another list");
+listOlists.add(anotherList);
+	 * */
+	ArrayList<ArrayList<Afericao>> listOfLists = new ArrayList<ArrayList<Afericao>>();
+	private ArrayList<Afericao> singleList;
+
+	public ArrayList<ArrayList<Afericao>> getAfericoes() {
+		return listOfLists;
 	}
 
 	public class TarefaVisitor<R, A> implements Tarefa.Visitor<R, A> {
 		public R visit(gramatica.Monitor.Absyn.ETarefa p, A arg) {
 			/* Code For ETarefa Goes Here */
+			singleList = new ArrayList<Afericao>(); 
 
 			p.acao_.accept(new AcaoVisitor<R, A>(), arg);
+			
+			listOfLists.add(singleList);
 
 			return null;
 		}
@@ -39,7 +54,7 @@ public class VisitanteMonitor {
 			
 			afericao.setHora1(hora[0]);
 			afericao.setHora2(hora[1]);
-			afericoes.add(afericao);
+			singleList.add(afericao);
 			
 
 			return null;

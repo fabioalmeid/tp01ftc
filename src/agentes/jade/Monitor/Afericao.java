@@ -1,5 +1,10 @@
 package agentes.jade.Monitor;
 
+import gramatica.Monitor.Absyn.EDados;
+import gramatica.Monitor.Absyn.EDados1;
+import gramatica.Monitor.Absyn.EDados2;
+import gramatica.Monitor.Absyn.EDados3;
+
 public class Afericao {
 	private Object dado;
 	/*Possiveis valores
@@ -46,7 +51,33 @@ public class Afericao {
 	}
 	
 	public String getHora() {
-		return ("as " +String.valueOf(this.hora1)+"h"+String.valueOf(this.hora2)+"m");
+		return ("as " + String.format("%02d", this.hora1) + " h: " + String.format("%02d",this.hora2) + " m");
+	}
+	
+	public String prettyPrinter() {
+		StringBuilder pretty = new StringBuilder();
+	    //builder.append("estou ");  
+		if (getDado() instanceof EDados) {
+			pretty.append("Temperatura de ");
+			pretty.append(String.valueOf(getQuantidade1()));
+			pretty.append(" C ");
+		} else if (getDado() instanceof EDados1) {
+			pretty.append("Bilirrubina ");
+			pretty.append(String.valueOf(getQuantidade1()));
+			pretty.append(" g/dL ");
+		} else if (getDado() instanceof EDados2) {
+			pretty.append("Hemoglobina ");
+			pretty.append(String.valueOf(getQuantidade1()));
+			pretty.append(" mg/dL ");
+		} else if (getDado() instanceof EDados3) {
+			pretty.append("Pressao Arterial ");
+			pretty.append(String.valueOf(getQuantidade1()));
+			pretty.append(" : ");
+			pretty.append(String.valueOf(getQuantidade2()));
+			pretty.append(" mmHg ");			
+		}
+		pretty.append(getHora());
+		return pretty.toString();
 	}
 	
 	

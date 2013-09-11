@@ -6,6 +6,7 @@ import gramatica.Centralizador.Absyn.EData1;
 import gramatica.Centralizador.Absyn.EData2;
 import gramatica.Centralizador.Absyn.EData3;
 import gramatica.Centralizador.Absyn.EData4;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -31,7 +32,7 @@ public class AgenteMonitor extends Agent {
 	private ACLMessage ACLmsg;
 	private Boolean isTempRunning, isHemoglobinaRunning, isBilirrubinaRunning, isBloodPressureRunning = false;
 	private Behaviour checkTemperature, checkHemoglobina, checkBilirrubina, checkBloodPressure = null;
-
+	
 	protected void setup() {
 
 		// Regista o monitor no servico de paginas amarelas
@@ -56,8 +57,8 @@ public class AgenteMonitor extends Agent {
 
 				if (ACLmsg != null) {
 					String mensagem = ACLmsg.getContent().toString();
-					String str = "";
-					if (str == "veio do centralizador?") {
+					AID sender = ACLmsg.getSender();
+					if (sender.getLocalName().equals("centralizador")) {
 						try {
 							TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
 							if (tc.getAcao() instanceof ECollect1) { // veja na gramatica o que significa ECollect1
@@ -79,37 +80,23 @@ public class AgenteMonitor extends Agent {
 											addBehaviour(checkHemoglobina);
 											isHemoglobinaRunning = true;
 										} else
-											System.out
-													.println("Monitor "
-															+ getName()
-															+ " ja esta monitorando Hemoglobina.");
+											System.out.println("Monitor " + getName() + " ja esta monitorando Hemoglobina.");
 									} else if (o instanceof EData3) { // BILIRRUBINA
 										System.out.print(" Bilirrubina\n");
 										if (!isBilirrubinaRunning) {
-											checkBilirrubina = new InformBilirrubinaBehaviour(
-													myAgent, ACLmsg);
+											checkBilirrubina = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkBilirrubina);
 											isBilirrubinaRunning = true;
 										} else
-											System.out
-													.println(getLocalName()
-															+ ": Monitor "
-															+ getName()
-															+ " ja esta monitorando Bilirrubina.");
-									} else if (o instanceof EData4) { // PRESSAO
-																		// ARTERIAL
+											System.out.println(getLocalName() + ": Monitor " + getName() + " ja esta monitorando Bilirrubina.");
+									} else if (o instanceof EData4) { // PRESSAO ARTERIAL
 										System.out.print(" Pressao Arterial\n");
 										if (!isBloodPressureRunning) {
-											checkBloodPressure = new InformBilirrubinaBehaviour(
-													myAgent, ACLmsg);
+											checkBloodPressure = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkBloodPressure);
 											isBloodPressureRunning = true;
 										} else
-											System.out
-													.println(getLocalName()
-															+ ": Monitor "
-															+ getName()
-															+ " ja esta monitorando Pressao Arterial.");
+											System.out .println(getLocalName() + ": Monitor " + getName() + " ja esta monitorando Pressao Arterial.");
 									}
 								}
 							} else if (tc.getAcao() instanceof ECollect2) {
@@ -121,41 +108,25 @@ public class AgenteMonitor extends Agent {
 										if (isTempRunning) {
 											removeBehaviour(checkTemperature);
 										} else
-											System.out
-													.println(getLocalName()
-															+ ": Monitor "
-															+ getName()
-															+ " nao esta monitorando Temperatura.");
+											System.out.println(getLocalName() + ": Monitor " + getName() + " nao esta monitorando Temperatura.");
 									} else if (o instanceof EData2) {
 										System.out.print(" Hemoglobina\n");
 										if (isHemoglobinaRunning) {
 											removeBehaviour(checkHemoglobina);
 										} else
-											System.out
-													.println(getLocalName()
-															+ ": Monitor "
-															+ getName()
-															+ " nao esta monitorando Hemoglobina.");
+											System.out.println(getLocalName() + ": Monitor " + getName() + " nao esta monitorando Hemoglobina.");
 									} else if (o instanceof EData3) {
 										System.out.print(" bilirrubina\n");
 										if (isBilirrubinaRunning) {
 											removeBehaviour(checkBilirrubina);
 										} else
-											System.out
-													.println(getLocalName()
-															+ ": Monitor "
-															+ getName()
-															+ " nao esta monitorando Bilirrubina.");
+											System.out.println(getLocalName() + ": Monitor " + getName() + " nao esta monitorando Bilirrubina.");
 									} else if (o instanceof EData4) {
 										System.out.print(" Pressao Arterial\n");
 										if (isBloodPressureRunning) {
 											removeBehaviour(checkBloodPressure);
 										} else
-											System.out
-													.println(getLocalName()
-															+ ": Monitor "
-															+ getName()
-															+ " nao esta monitorando Pressao Arterial.");
+											System.out.println(getLocalName() + ": Monitor " + getName() + " nao esta monitorando Pressao Arterial.");
 									}
 								}
 
@@ -163,6 +134,8 @@ public class AgenteMonitor extends Agent {
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
+					} else { 
+						System.out.println("Entao veio do paciente: " + mensagem);
 					}
 				}
 			}

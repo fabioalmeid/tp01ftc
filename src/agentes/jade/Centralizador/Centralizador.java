@@ -99,13 +99,15 @@ public class Centralizador extends Agent {
 						TarefaMonitor tm = new TarefaMonitor();
 						try {
 							tm = GrammarParserMonitor.getMonitorMessageObject(msg.getContent());
-							List<Afericao> listaAF = tm.getAfericoes();
+							ArrayList<ArrayList<Afericao>> listaAF = tm.getListaDeListaAfericoes();
 							// exemplo de tratamento para temperatura
-							for (Afericao af : listaAF) {
-								if (af.getDado() instanceof EDados) { // veja gramatica para EDados
-									if (af.getQuantidade1() > INICIO_FEBRE)
-										System.out.print(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio");
-									else System.out.print(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio");
+							for (ArrayList<Afericao> afericoes : listaAF) {
+								for (Afericao af : afericoes) {
+									if (af.getDado() instanceof EDados) { // veja gramatica para EDados
+										if (af.getQuantidade1() > INICIO_FEBRE)
+											System.out.print(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio");
+										else System.out.print(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio");
+									}
 								}
 							}
 						} catch (Exception e){
