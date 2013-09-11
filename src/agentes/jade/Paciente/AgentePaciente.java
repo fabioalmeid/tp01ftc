@@ -28,7 +28,7 @@ import agentes.jade.Centralizador.Medicamento;
 import agentes.jade.Centralizador.TarefaCentralizador;
 
 public class AgentePaciente extends Agent {
-	private static final long INTERVALO_ATUALIZACAO = 10000;
+	private static final long INTERVALO_ATUALIZACAO = 10000; // 10s
 	private static final int MAX_TICKS_UNCHANGED = 6;
 	private List<AID> monitor;
 	private List<AID> atuador;
@@ -61,6 +61,9 @@ public class AgentePaciente extends Agent {
 		
 		// adiciona comportamento de mudanca de bilirrubina
 		addBehaviour(new UpdateBilirrubinaBehaviour(this, INTERVALO_ATUALIZACAO));
+
+		// adiciona comportamento de mudanca de pressao		
+		addBehaviour(new UpdatePressaoBehaviour(this, INTERVALO_ATUALIZACAO));
 		
 	}
 	
@@ -271,30 +274,34 @@ public class AgentePaciente extends Agent {
 			template.addServices(sd);
 			try {
 				DFAgentDescription[] result = DFService.search(myAgent,template);
+				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
 				monitor = new ArrayList<AID>();
-				for (int i = 0; i < result.length; ++i)
+				for (int i = 0; i < result.length; ++i) {
 					monitor.add(result[i].getName());
+					System.out.print(" | " + monitor.get(i).getLocalName());
+				}
+				System.out.println();
 			} catch (FIPAException fe) {
 				fe.printStackTrace();
 			}
-			
+
 			// Atualiza lista de atuadores
-//			DFAgentDescription template2 = new DFAgentDescription();
-//			ServiceDescription sd2 = new ServiceDescription();
-//			sd2.setType("atuador");
-//			template2.addServices(sd2);
-//			try {
-//				DFAgentDescription[] result2 = DFService.search(myAgent, template2); 
-//				System.out.println("Achei os seguintes atuadores:");
-//				atuador = new ArrayList<AID>();
-//				for (int i = 0; i < result2.length; ++i) {
-//					atuador.add(result2[i].getName());
-//					System.out.println(atuador.get(i).getName());
-//				}
-//			}
-//			catch (FIPAException fe) {
-//				fe.printStackTrace();
-//			}
+			DFAgentDescription template2 = new DFAgentDescription();
+			ServiceDescription sd2 = new ServiceDescription();
+			sd2.setType("atuador");
+			template2.addServices(sd2);
+			try {
+				DFAgentDescription[] result2 = DFService.search(myAgent, template2);
+				System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
+				atuador = new ArrayList<AID>();
+				for (int i = 0; i < result2.length; ++i) {
+					atuador.add(result2[i].getName());
+					System.out.print(" | " + atuador.get(i).getLocalName());
+				}
+				System.out.println();
+			} catch (FIPAException fe) {
+				fe.printStackTrace();
+			}
 		}
 	}
 }

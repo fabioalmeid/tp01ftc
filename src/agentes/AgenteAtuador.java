@@ -39,7 +39,7 @@ public class AgenteAtuador extends Agent {
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType("monitor");
+		sd.setType("atuador");
 		sd.setName(getName());
 		dfd.addServices(sd);
 		try {

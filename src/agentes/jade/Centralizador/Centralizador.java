@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import util.GeradorAleatorioMsg;
+import agentes.UpdateAgentList;
 import agentes.jade.Monitor.Afericao;
 import agentes.jade.Monitor.GrammarParserMonitor;
 import agentes.jade.Monitor.TarefaMonitor;
@@ -32,8 +33,16 @@ public class Centralizador extends Agent {
 	
 	private String monitorName, atuadorName;
 	
+	/*
+	 * TODO LIST
+	 * TODO Implementar metodo que transforma objeto em mensagem de texto string
+	 * TODO Implementar geração automatica de mensagens randomicas a partir da gramatica
+	 * TODO Implementar logica de decisao do centralizador
+	 * TODO Implementar armazenamento e tabulacao dos dados no centralizador
+	 * */
+	
 	public void setup() {
-		System.out.println("Centralizador: Sou o agente monitor " + getAID().getName() + " e estou pronto.");
+		System.out.println("Centralizador: Sou o agente monitor " + getAID().getLocalName() + " e estou pronto.");
 
 		// create agent t1 on the same container of the creator agent
 		AgentContainer container = (AgentContainer) getContainerController();
@@ -47,6 +56,8 @@ public class Centralizador extends Agent {
 			atuadorName = "atuador" + Integer.toString(i);
 			CreatNewAgent(container, atuadorName, "agentes.AgenteAtuador");
 		}
+		
+		CreatNewAgent(container, "paciente", "agentes.jade.Paciente.AgentePaciente");
 
 		// minute
 		addBehaviour(new TickerBehaviour(this, INTERVALO_REQUISICAO) {
@@ -55,43 +66,19 @@ public class Centralizador extends Agent {
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER-1));
 				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizador(), "monitor" + indexMsg);
 				
-				//atualiza de tempos em tempos lista de agentes
-				// Atualiza lista de monitores
-				DFAgentDescription template = new DFAgentDescription();
-				ServiceDescription sd = new ServiceDescription();
-				sd.setType("monitor");
-				template.addServices(sd);
-				try {
-					DFAgentDescription[] result = DFService.search(myAgent, template); 
-					System.out.print("Centralizador: Achei os seguintes monitores:");
-					monitor = new ArrayList<AID>(); 
-					for (int i = 0; i < result.length; ++i) {
-						monitor.add(result[i].getName());
-						System.out.print(" | " + monitor.get(i).getName());
-					}
-					System.out.println();
+				monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
+				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
+				for (AID m : monitor) {
+					System.out.print(" | " + m.getLocalName());
 				}
-				catch (FIPAException fe) {
-					fe.printStackTrace();
-				}
+				System.out.println();
 				
-				// Atualiza lista de atuadores
-//				DFAgentDescription template2 = new DFAgentDescription();
-//				ServiceDescription sd2 = new ServiceDescription();
-//				sd2.setType("atuador");
-//				template2.addServices(sd2);
-//				try {
-//					DFAgentDescription[] result2 = DFService.search(myAgent, template2); 
-//					System.out.println("Achei os seguintes atuadores:");
-//					atuador = new ArrayList<AID>();
-//					for (int i = 0; i < result2.length; ++i) {
-//						atuador.add(result2[i].getName());
-//						System.out.println(atuador.get(i).getName());
-//					}
-//				}
-//				catch (FIPAException fe) {
-//					fe.printStackTrace();
-//				}
+				atuador = UpdateAgentList.getAgentUpdatedList("atuador", myAgent);
+				System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
+				for (AID a : atuador) {
+					System.out.print(" | " + a.getLocalName());
+				}
+				System.out.println();
 			}
 		});
 		
@@ -107,7 +94,7 @@ public class Centralizador extends Agent {
 
 					// se o sender for monitor
 					if (monitor.contains(sender)) {
-						System.out.println("Centralizador: Msg recebida do monitor " + msg.getSender().getLocalName() + " -->" + msg.getContent());
+						System.out.println(getLocalName() + ": Msg recebida do monitor " + msg.getSender().getLocalName() + " -->" + msg.getContent());
 						// valida mensagem
 						TarefaMonitor tm = new TarefaMonitor();
 						try {
@@ -117,8 +104,8 @@ public class Centralizador extends Agent {
 							for (Afericao af : listaAF) {
 								if (af.getDado() instanceof EDados) { // veja gramatica para EDados
 									if (af.getQuantidade1() > INICIO_FEBRE)
-										System.out.print("Centralizador: " + sender.getName() + " esta com febre, devo aplicar remedio");
-									else System.out.print("Centralizador: " + sender.getName() + " tem temperatura boa, nao precisa remedio");
+										System.out.print(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio");
+									else System.out.print(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio");
 								}
 							}
 						} catch (Exception e){
@@ -126,8 +113,8 @@ public class Centralizador extends Agent {
 						}
 					}
 					else if (atuador.contains(sender))
-						System.out.println("Centralizador: Msg recebida do atuador " + msg.getSender().getLocalName() + " -->" + msg.getContent());
-					else System.out.println("Centralizador: ERRO: Mensagem recebida do desconhecido");
+						System.out.println(getLocalName() + ": Msg recebida do atuador " + msg.getSender().getLocalName() + " -->" + msg.getContent());
+					else System.out.println(getLocalName() + ": ERRO: Mensagem recebida do desconhecido");
 					System.out.println("**********************");
 					System.out.println();
 				}
@@ -139,7 +126,7 @@ public class Centralizador extends Agent {
 	private AID CreatNewAgent(AgentContainer container, String agentName, String agentAdrress) {
 		AID minhaID = null;
 		try {
-			System.out.println("agentName  ++++" + agentName);
+			System.out.println(getLocalName() + ": Agente " + agentName + " criado com sucesso");
 			container.createNewAgent(agentName, agentAdrress, null).start();
 		} catch (StaleProxyException e) {
 			// TODO Auto-generated catch block
@@ -152,7 +139,7 @@ public class Centralizador extends Agent {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
 		message.setContent(mensagem);
-		System.out.println("Centralizador: Enviei mensagem para " + agentName + " : " + mensagem);
+		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
 		send(message);
 	}
 }

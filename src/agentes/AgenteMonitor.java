@@ -48,7 +48,6 @@ public class AgenteMonitor extends Agent {
 		}
 
 		addBehaviour(new CyclicBehaviour(this) {
-			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void action() {
@@ -57,90 +56,113 @@ public class AgenteMonitor extends Agent {
 
 				if (ACLmsg != null) {
 					String mensagem = ACLmsg.getContent().toString();
-					try {
-						TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
-						if (tc.getAcao() instanceof ECollect1) { // veja na gramatica o que significa ECollect1
-							System.out.print("Monitor: Iniciando a medicao");
-							List<Object> dados = tc.getDados();
-							for (Object o : dados) {
-								if (o instanceof EData1) { // TEMPERATURE
-									System.out.print(" Temperatura\n");
-									if (!isTempRunning) {
-										checkTemperature = new InformTempBehaviour(myAgent, ACLmsg);
-										addBehaviour(checkTemperature);
-										isTempRunning = true;
-									} else
-										System.out.println("Monitor " + getName() + " ja esta monitorando temperatura.");
-								} else if (o instanceof EData2) { // HEMOGLOBINA
-									System.out.print(" Hemoglobina\n");
-									if (!isHemoglobinaRunning) {
-										checkHemoglobina = new InformHemoglobinaBehaviour(myAgent, ACLmsg);
-										addBehaviour(checkHemoglobina);
-										isHemoglobinaRunning = true;
-									} else
-										System.out.println("Monitor " + getName() + " ja esta monitorando Hemoglobina.");
-								} else if (o instanceof EData3) { // BILIRRUBINA
-									System.out.print(" Bilirrubina\n");
-									if (!isBilirrubinaRunning) {
-										checkBilirrubina = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
-										addBehaviour(checkBilirrubina);
-										isBilirrubinaRunning = true;
-									} else
-										System.out.println("Monitor " + getName() + " ja esta monitorando Bilirrubina.");
-								} else if (o instanceof EData4) { // PRESSAO ARTERIAL
-									System.out.print(" Pressao Arterial\n");
-									if (!isBloodPressureRunning) {
-										checkBloodPressure = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
-										addBehaviour(checkBloodPressure);
-										isBloodPressureRunning = true;
-									} else
-										System.out.println("Monitor " + getName() + " ja esta monitorando Pressao Arterial.");
+					String str = "";
+					if (str == "veio do centralizador?") {
+						try {
+							TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
+							if (tc.getAcao() instanceof ECollect1) { // veja na gramatica o que significa ECollect1
+								System.out.print(getLocalName() + ": Monitor: Iniciando a medicao");
+								List<Object> dados = tc.getDados();
+								for (Object o : dados) {
+									if (o instanceof EData1) { // TEMPERATURE
+										System.out.print(" Temperatura\n");
+										if (!isTempRunning) {
+											checkTemperature = new InformTempBehaviour(myAgent, ACLmsg);
+											addBehaviour(checkTemperature);
+											isTempRunning = true;
+										} else
+											System.out.println(getLocalName() + ": Monitor " + getName() + " ja esta monitorando temperatura.");
+									} else if (o instanceof EData2) { // HEMOGLOBINA
+										System.out.print(" Hemoglobina\n");
+										if (!isHemoglobinaRunning) {
+											checkHemoglobina = new InformHemoglobinaBehaviour(myAgent, ACLmsg);
+											addBehaviour(checkHemoglobina);
+											isHemoglobinaRunning = true;
+										} else
+											System.out
+													.println("Monitor "
+															+ getName()
+															+ " ja esta monitorando Hemoglobina.");
+									} else if (o instanceof EData3) { // BILIRRUBINA
+										System.out.print(" Bilirrubina\n");
+										if (!isBilirrubinaRunning) {
+											checkBilirrubina = new InformBilirrubinaBehaviour(
+													myAgent, ACLmsg);
+											addBehaviour(checkBilirrubina);
+											isBilirrubinaRunning = true;
+										} else
+											System.out
+													.println(getLocalName()
+															+ ": Monitor "
+															+ getName()
+															+ " ja esta monitorando Bilirrubina.");
+									} else if (o instanceof EData4) { // PRESSAO
+																		// ARTERIAL
+										System.out.print(" Pressao Arterial\n");
+										if (!isBloodPressureRunning) {
+											checkBloodPressure = new InformBilirrubinaBehaviour(
+													myAgent, ACLmsg);
+											addBehaviour(checkBloodPressure);
+											isBloodPressureRunning = true;
+										} else
+											System.out
+													.println(getLocalName()
+															+ ": Monitor "
+															+ getName()
+															+ " ja esta monitorando Pressao Arterial.");
+									}
 								}
-							}
-						} else if (tc.getAcao() instanceof ECollect2) {
-							System.out.print("Monitor: Parando medicao");
-							List<Object> dados = tc.getDados();
-							for (Object o : dados) {
-								if (o instanceof EData1) {
-									System.out.print(" Temperatura\n");
-									if (isTempRunning) {
-										removeBehaviour(checkTemperature);
-									} else
-										System.out.println("\nMonitor " + getName() + " nao esta monitorando Temperatura.");
-								} else if (o instanceof EData2) {
-									System.out.print(" Hemoglobina\n");
-									if (isHemoglobinaRunning) {
-										removeBehaviour(checkHemoglobina);
-									} else
-										System.out.println("\nMonitor " + getName() + " nao esta monitorando Hemoglobina.");
-								} else if (o instanceof EData3) {
-									System.out.print(" bilirrubina\n");
-									if (isBilirrubinaRunning) {
-										removeBehaviour(checkBilirrubina);
-									} else
-										System.out.println("\nMonitor " + getName() + " nao esta monitorando Bilirrubina.");
-								} else if (o instanceof EData4) {
-									System.out.print(" Pressao Arterial\n");
-									if (isBloodPressureRunning) {
-										removeBehaviour(checkBloodPressure);
-									} else
-										System.out.println("\nMonitor "	+ getName() + " nao esta monitorando Pressao Arterial.");
+							} else if (tc.getAcao() instanceof ECollect2) {
+								System.out.print("Monitor: Parando medicao");
+								List<Object> dados = tc.getDados();
+								for (Object o : dados) {
+									if (o instanceof EData1) {
+										System.out.print(" Temperatura\n");
+										if (isTempRunning) {
+											removeBehaviour(checkTemperature);
+										} else
+											System.out
+													.println(getLocalName()
+															+ ": Monitor "
+															+ getName()
+															+ " nao esta monitorando Temperatura.");
+									} else if (o instanceof EData2) {
+										System.out.print(" Hemoglobina\n");
+										if (isHemoglobinaRunning) {
+											removeBehaviour(checkHemoglobina);
+										} else
+											System.out
+													.println(getLocalName()
+															+ ": Monitor "
+															+ getName()
+															+ " nao esta monitorando Hemoglobina.");
+									} else if (o instanceof EData3) {
+										System.out.print(" bilirrubina\n");
+										if (isBilirrubinaRunning) {
+											removeBehaviour(checkBilirrubina);
+										} else
+											System.out
+													.println(getLocalName()
+															+ ": Monitor "
+															+ getName()
+															+ " nao esta monitorando Bilirrubina.");
+									} else if (o instanceof EData4) {
+										System.out.print(" Pressao Arterial\n");
+										if (isBloodPressureRunning) {
+											removeBehaviour(checkBloodPressure);
+										} else
+											System.out
+													.println(getLocalName()
+															+ ": Monitor "
+															+ getName()
+															+ " nao esta monitorando Pressao Arterial.");
+									}
 								}
-							}
 
-						}/*
-						 * else if (tc.getAcao() instanceof EApply1) {
-						 * System.out.print("Liberando medicacao");
-						 * List<Medicamento> med = tc.getMedicacao();
-						 * ImprimeMedicacao(med); } else if (tc.getAcao()
-						 * instanceof EApply2){
-						 * System.out.print("Cessando liberacao da medicacao");
-						 * List<Medicamento> med = tc.getMedicacao();
-						 * ImprimeMedicacao(med); }
-						 * System.out.println("\n-------------------");
-						 */
-					} catch (Exception e) {
-						System.out.println(e.getMessage());
+							}
+						} catch (Exception e) {
+							System.out.println(e.getMessage());
+						}
 					}
 				}
 			}
