@@ -56,6 +56,12 @@ public class AgentePaciente extends Agent {
 		// adiciona comportamento de mudanca de temperatura
 		addBehaviour(new UpdateTemperatureBehaviour(this, INTERVALO_ATUALIZACAO));
 		
+		// adiciona comportamento de mudanca de hemoglobina		
+		addBehaviour(new UpdateHemoglobinaBehaviour(this, INTERVALO_ATUALIZACAO));
+		
+		// adiciona comportamento de mudanca de bilirrubina
+		addBehaviour(new UpdateBilirrubinaBehaviour(this, INTERVALO_ATUALIZACAO));
+		
 	}
 	
 	class ListenBehaviour extends CyclicBehaviour {
@@ -75,7 +81,7 @@ public class AgentePaciente extends Agent {
 
 					try {
 						TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
-						if (tc.getAcao() instanceof ECollect1) {
+						if (tc.getAcao() instanceof ECollect1) { // ECollect1. Coletar ::= "Iniciar Medicao";
 							List<Object> dados = tc.getDados();
 							for (Object o : dados) {
 								if (o instanceof EData1)
@@ -87,7 +93,7 @@ public class AgentePaciente extends Agent {
 								else if (o instanceof EData4)
 									resposta = resposta + String.valueOf(Paciente.getPressao()) + ";";
 							}
-						} else if (tc.getAcao() instanceof EApply1) {
+						} else if (tc.getAcao() instanceof EApply1) { // EApply1. Aplicar ::= "Liberar"; 
 							List<Medicamento> med = tc.getMedicacao();
 							for (Medicamento m : med) {
 								if (m.remedio instanceof ERemedy1) {
@@ -103,7 +109,7 @@ public class AgentePaciente extends Agent {
 								}
 							}
 
-						} else if (tc.getAcao() instanceof EApply2) {
+						} else if (tc.getAcao() instanceof EApply2) { // EApply2. Aplicar ::= "Cessar Liberacao";
 							System.out.print("Cessando liberacao da medicacao");
 							List<Medicamento> med = tc.getMedicacao();
 							for (Medicamento m : med) {
@@ -155,6 +161,68 @@ public class AgentePaciente extends Agent {
 				ticks++;
 				if (ticks >= MAX_TICKS_UNCHANGED) {
 					Paciente.setTemperatura(randomTemperature());
+					ticks = 0;
+				}
+			}
+			
+		}
+	}
+	
+	class UpdateHemoglobinaBehaviour extends TickerBehaviour {
+		int ticks = 0;
+		
+		public UpdateHemoglobinaBehaviour(Agent a, long period) {
+			super(a, period);
+		}
+		
+		private Integer randomHemoglobina(){
+			// 13,5 - 18 bom
+			// abaixo 12.5 anemia, acima de 18 doente
+			int Min = 9, Max = 23;
+			return Min + (int)(Math.random() * ((Max - Min) + 1));
+		}
+
+		@Override
+		protected void onTick() {
+			if (Paciente.getRemedioHemoglobina()) { // tem remedio para temperatura
+				// decrementa temperatura a cada ticks
+				Paciente.setHemoglobina(Paciente.getHemoglobinaBoa());
+				ticks = 0;				
+			} else {
+				ticks++;
+				if (ticks >= MAX_TICKS_UNCHANGED) {
+					Paciente.setHemoglobina(randomHemoglobina());
+					ticks = 0;
+				}
+			}
+			
+		}
+	}
+	
+	class UpdateBilirrubinaBehaviour extends TickerBehaviour {
+		int ticks = 0;
+		
+		public UpdateBilirrubinaBehaviour(Agent a, long period) {
+			super(a, period);
+		}
+		
+		private Integer randomBilirrubina(){
+			// 0 - 10 bom
+			// acima de 10 doente
+			int Min = 0, Max = 14;
+			return Min + (int)(Math.random() * ((Max - Min) + 1));
+		}
+
+		@Override
+		protected void onTick() {
+			if (Paciente.getRemedioBilirrubuna()) { // tem remedio para temperatura
+				// decrementa temperatura a cada ticks
+				Paciente.setBilirrubina(Paciente.getBilirrubina()-1);
+				ticks = 0;				
+			} else {
+				ticks++;
+				if (ticks >= MAX_TICKS_UNCHANGED) {
+					Paciente.setHemoglobina(randomBilirrubina());
 					ticks = 0;
 				}
 			}
