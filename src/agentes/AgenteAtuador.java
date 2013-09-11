@@ -4,16 +4,6 @@ import gramatica.Centralizador.Absyn.ECollect1;
 import gramatica.Centralizador.Absyn.ECollect2;
 import gramatica.Centralizador.Absyn.EData1;
 import gramatica.Centralizador.Absyn.EData2;
-import gramatica.Centralizador.Absyn.EData3;
-import gramatica.Centralizador.Absyn.EData4;
-
-import java.util.List;
-
-import agentes.AgenteMonitor.InformBilirrubinaBehaviour;
-import agentes.AgenteMonitor.InformHemoglobinaBehaviour;
-import agentes.AgenteMonitor.InformTempBehaviour;
-import agentes.jade.Centralizador.GrammarParserCentralizador;
-import agentes.jade.Centralizador.TarefaCentralizador;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -24,6 +14,11 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.util.List;
+
+import agentes.jade.Centralizador.GrammarParserCentralizador;
+import agentes.jade.Centralizador.TarefaCentralizador;
 
 public class AgenteAtuador extends Agent {
 

@@ -1,4 +1,4 @@
-package agentes;
+package agentes.jade.Monitor;
 
 import gramatica.Centralizador.Absyn.ECollect1;
 import gramatica.Centralizador.Absyn.ECollect2;
@@ -33,6 +33,12 @@ public class AgenteMonitor extends Agent {
 	private Boolean isTempRunning, isHemoglobinaRunning, isBilirrubinaRunning, isBloodPressureRunning = false;
 	private Behaviour checkTemperature, checkHemoglobina, checkBilirrubina, checkBloodPressure = null;
 	
+	/*
+	 * TODO LIST
+	 * TODO Todas as requisições para informar temperatura, hemoblobina, pressao e etc devem ser repassadas ao paciente
+	 * TODO Todas as mensagens que o monitor receber do paciente , devem ser repassadas Ipsis litteris para o centralizador
+	 * 
+	 * */
 	protected void setup() {
 
 		// Regista o monitor no servico de paginas amarelas
@@ -239,16 +245,6 @@ public class AgenteMonitor extends Agent {
 		replica.setPerformative(ACLMessage.INFORM);
 		replica.setContent(msgToSend);
 		send(replica);
-
-	}
-
-	private int randomNumber(int max) {
-		return (int) (Math.random() * max);
-	}
-
-	private String getCurrentTime() {
-
-		return new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance() .getTime());
 
 	}
 }

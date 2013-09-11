@@ -36,7 +36,7 @@ public class TarefaMonitor {
 		return pretty.toString();
 	}
 	
-	private String prettyPrinterAfericoes(ArrayList<Afericao> afericoes) {
+	public String prettyPrinterAfericoes(ArrayList<Afericao> afericoes) {
 		StringBuilder pretty = new StringBuilder();
 
 		int cont = 0;

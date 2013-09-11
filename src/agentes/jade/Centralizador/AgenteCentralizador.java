@@ -23,7 +23,7 @@ import agentes.jade.Monitor.Afericao;
 import agentes.jade.Monitor.GrammarParserMonitor;
 import agentes.jade.Monitor.TarefaMonitor;
 
-public class Centralizador extends Agent {
+public class AgenteCentralizador extends Agent {
 	private static final int INICIO_FEBRE = 38;
 	private static final int INTERVALO_REQUISICAO = 6000;
 	private final int AGENTSNUMBER = 2;

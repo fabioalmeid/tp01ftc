@@ -8,7 +8,6 @@ import gramatica.Monitor.Absyn.Quantidade;
 import gramatica.Monitor.Absyn.Tarefa;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class VisitanteMonitor {
 	/*
