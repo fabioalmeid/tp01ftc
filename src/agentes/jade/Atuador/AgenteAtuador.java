@@ -1,9 +1,10 @@
 package agentes.jade.Atuador;
 
-import gramatica.Centralizador.Absyn.ECollect1;
-import gramatica.Centralizador.Absyn.ECollect2;
-import gramatica.Centralizador.Absyn.EData1;
-import gramatica.Centralizador.Absyn.EData2;
+import gramatica.Centralizador.Absyn.EApply1;
+import gramatica.Centralizador.Absyn.EApply2;
+import gramatica.Centralizador.Absyn.ERemedy1;
+import gramatica.Centralizador.Absyn.ERemedy2;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -18,15 +19,16 @@ import jade.lang.acl.MessageTemplate;
 import java.util.List;
 
 import agentes.jade.Centralizador.GrammarParserCentralizador;
+import agentes.jade.Centralizador.Medicamento;
 import agentes.jade.Centralizador.TarefaCentralizador;
 
 public class AgenteAtuador extends Agent {
 
-	private static final long serialVersionUID = 1L;
+	private static final int INTERVAL_FREQUENCY = 2000;
 
 	private ACLMessage ACLmsg;
-	private Boolean isDipironaRunning, isParacetamolRunning = false;
-	private Behaviour checkDipirona, checkParacetamol = null;
+	private Boolean isDipironaRunning = false, isParacetamolRunning = false;
+	private Behaviour checkDipirona = null, checkParacetamol = null;
 
 	protected void setup() {
 
@@ -53,112 +55,108 @@ public class AgenteAtuador extends Agent {
 
 				if (ACLmsg != null) {
 					String mensagem = ACLmsg.getContent().toString();
-					try {
-						TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
-						if (tc.getAcao() instanceof ECollect1) { // veja na gramatica o que significa ECollect1
-							System.out.print("Atuador: Liberando Remedio");
-							List<Object> dados = tc.getDados();
-							for (Object o : dados) {
-								if (o.equals("")) { // **********************************CHANGE***********************************
-									System.out.print(" Dipirona\n");
-									if (!isDipironaRunning) {
-										checkDipirona = new InformDipironaBehaviour(myAgent, ACLmsg);
-										addBehaviour(checkDipirona);
-										isDipironaRunning = true;
-									} else
-										System.out.println("Monitor " + getName() + " ja esta liberando Dipirona.");
-								} else if (o.equals("")) { // **********************************CHANGE***********************************
-									System.out.print(" Paracetamol\n");
-									if (!isParacetamolRunning) {
-										checkParacetamol = new InformParacetamolBehaviour(myAgent, ACLmsg);
-										addBehaviour(checkParacetamol);
-										isParacetamolRunning = true;
-									} else
-										System.out.println("Monitor " + getName() + " ja esta monitorando Paracetamol.");
+					AID sender = ACLmsg.getSender();
+					if (sender.getLocalName().equals("centralizador")) {
+						try {
+							TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
+							if (tc.getAcao() instanceof EApply1) {
+								System.out.print(getLocalName() + ": Liberando Remedio");
+								List<Medicamento> med = tc.getMedicacao();
+								for (Medicamento m : med) {
+									if (m.remedio instanceof ERemedy1) {
+										System.out.println(" Dipirona");
+										if (!isDipironaRunning) {
+											checkDipirona = new ApplyDipironaBehaviour(myAgent, ACLmsg);
+											addBehaviour(checkDipirona);
+											isDipironaRunning = true;
+										} else
+											System.out.println(getLocalName() + " ja esta liberando Dipirona.");
+									} else if (m.remedio instanceof ERemedy2) {
+										System.out.println(" Paracetamol");
+										if (!isParacetamolRunning) {
+											checkParacetamol = new ApplyParacetamolBehaviour(myAgent, ACLmsg);
+											addBehaviour(checkParacetamol);
+											isParacetamolRunning = true;
+										} else
+											System.out.println(getLocalName() + " ja esta liberando Paracetamol.");
+									} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
 								}
-							}
-						} else if (tc.getAcao() instanceof ECollect2) {
-							System.out.print("Monitor: Parando medicao");
-							List<Object> dados = tc.getDados();
-							for (Object o : dados) {
-								if (o instanceof EData1) { // **********************************CHANGE***********************************
-									System.out.print(" Dipirona\n");
-									if (isDipironaRunning) {
-										removeBehaviour(checkDipirona);
-									} else
-										System.out.println("\nMonitor "	+ getName() + " nao esta monitorando Dipirona.");
-								} else if (o instanceof EData2) {// **********************************CHANGE***********************************
-									System.out.print(" Hemoglobina\n");
-									if (isParacetamolRunning) {
-										removeBehaviour(checkParacetamol);
-									} else
-										System.out.println("\nMonitor " + getName()+ " nao esta monitorando Paracetamol.");
+							} else if (tc.getAcao() instanceof EApply2) {
+								System.out.print("Monitor: Parando medicao");
+								List<Medicamento> med = tc.getMedicacao();
+								for (Medicamento m : med) {
+									if (m.remedio instanceof ERemedy1) {
+										System.out.println(" Dipirona");
+										if (isDipironaRunning) {
+											removeBehaviour(checkDipirona);
+										} else
+											System.out.println(getLocalName() + " nao esta monitorando Dipirona.");
+									} else if (m.remedio instanceof ERemedy2) {
+										System.out.println(" Hemoglobina");
+										if (isParacetamolRunning) {
+											removeBehaviour(checkParacetamol);
+										} else
+											System.out.println(getLocalName() + " nao esta monitorando Paracetamol.");
+									}
 								}
-							}
 
+							} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
+						} catch (Exception e) {
+							System.out.println(e.getMessage());
 						}
-					} catch (Exception e) {
-						System.out.println(e.getMessage());
+					}
+					else {
+						sendMessageToAgent(mensagem, "centralizador");
+						System.out.println(getLocalName() + ": Respondendo centralizador com " + mensagem);
 					}
 				}
 			}
 		});
 	}
 
+	class ApplyDipironaBehaviour extends TickerBehaviour {
+		
+		private static final long serialVersionUID = 1L;
+		private ACLMessage aclMessage;
+
+		public ApplyDipironaBehaviour(Agent a, ACLMessage aclMessage) {
+			super(a, INTERVAL_FREQUENCY);
+			
+			//System.out.println(getLocalName() + ": ApplyDipironaBehaviour acionado");
+			this.aclMessage = aclMessage;
+		}
+
+		@Override
+		protected void onTick() {
+			System.out.println(getLocalName() + ": " + aclMessage.getContent());
+			sendMessageToAgent(aclMessage.getContent(), "paciente");			
+		}
+
+	}
+
+	class ApplyParacetamolBehaviour extends TickerBehaviour {
+
+		private ACLMessage aclMessage;
+
+		public ApplyParacetamolBehaviour(Agent a, ACLMessage aclMessage) {
+			super(a, INTERVAL_FREQUENCY);
+			System.out.println(getLocalName() + ": ApplyParacetamolBehaviour acionado");
+			this.aclMessage = aclMessage;
+		}
+
+		@Override
+		protected void onTick() {
+			System.out.println(getLocalName() + ": " + aclMessage.getContent());
+			sendMessageToAgent(aclMessage.getContent(), "paciente");
+		}
+
+	}
 	
-	// MONITOR informs to Centralizador a given DIPIRONA at each 2s
-	class InformDipironaBehaviour extends TickerBehaviour {
-		private static final long serialVersionUID = 1L;
-		private ACLMessage aclMessage;
-
-		public InformDipironaBehaviour(Agent a, ACLMessage aclMessage) {
-			super(a, 2000);
-			this.aclMessage = aclMessage;
-			System.out.println("Monitor: aclMessage********************************" + aclMessage);
-		}
-
-		@Override
-		protected void onTick() {
-			// int Min = 36;
-			// int Max = 41;
-			// int temperatura = Min + (int) (Math.random() * ((Max - Min) +
-			// 1));
-			String resposta = "Liberando Dipirona";
-			System.out.println("Monitor: msgtoSend para Centralizador  >>>>> "+ resposta);
-			sendMsgtoCentralizador(aclMessage, resposta);
-		}
-
-	}
-
-	// MONITOR informs to Centralizador a given PARACETAMOL at each 2s
-	class InformParacetamolBehaviour extends TickerBehaviour {
-		private static final long serialVersionUID = 1L;
-		private ACLMessage aclMessage;
-
-		public InformParacetamolBehaviour(Agent a, ACLMessage aclMessage) {
-			super(a, 2000);
-			this.aclMessage = aclMessage;
-			System.out.println("Monitor: aclMessage********************************"+ aclMessage);
-		}
-
-		@Override
-		protected void onTick() {
-			// int Min = 36;
-			// int Max = 41;
-			// int temperatura = Min + (int) (Math.random() * ((Max - Min) +
-			// 1));
-			String resposta = "Liberando Paracetamol";
-			System.out.println("Monitor: msgtoSend para Centralizador  >>>>> " + resposta);
-			sendMsgtoCentralizador(aclMessage, resposta);
-		}
-
-	}
-
-	private void sendMsgtoCentralizador(ACLMessage msg, String msgToSend) {
-		ACLMessage replica = msg.createReply();
-		replica.setPerformative(ACLMessage.INFORM);
-		replica.setContent(msgToSend);
-		send(replica);
-
+	private void sendMessageToAgent(String mensagem, String agentName) {
+		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
+		message.setContent(mensagem);
+		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		send(message);
 	}
 }

@@ -25,7 +25,7 @@ import agentes.jade.Monitor.TarefaMonitor;
 
 public class AgenteCentralizador extends Agent {
 	private static final int INICIO_FEBRE = 38;
-	private static final int INTERVALO_REQUISICAO = 6000;
+	private static final int INTERVALO_REQUISICAO = 10000;
 	private final int AGENTSNUMBER = 2;
 	
 	private List<AID> monitor;
@@ -50,11 +50,11 @@ public class AgenteCentralizador extends Agent {
 		for (int i = 0; i < AGENTSNUMBER; i++) {
 			// create MONITOR
 			monitorName = "monitor" + Integer.toString(i);
-			CreatNewAgent(container, monitorName, "agentes.AgenteMonitor");
+			CreatNewAgent(container, monitorName, "agentes.jade.Monitor.AgenteMonitor");
 
 			// create ATUADOR
 			atuadorName = "atuador" + Integer.toString(i);
-			CreatNewAgent(container, atuadorName, "agentes.AgenteAtuador");
+			CreatNewAgent(container, atuadorName, "agentes.jade.Atuador.AgenteAtuador");
 		}
 		
 		CreatNewAgent(container, "paciente", "agentes.jade.Paciente.AgentePaciente");
@@ -64,21 +64,25 @@ public class AgenteCentralizador extends Agent {
 			protected void onTick() {
 				// manda para algum monitor uma mensagem aleatoria
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER-1));
-				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizador(), "monitor" + indexMsg);
+				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizador(), "monitor" + indexMsg);
+				
+				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizador(), "atuador" + indexMsg);
+				
+				sendMessageToAgent("Liberar 8 Dipirona", "atuador" + indexMsg);
 				
 				monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
-				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
-				for (AID m : monitor) {
-					System.out.print(" | " + m.getLocalName());
-				}
-				System.out.println();
+//				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
+//				for (AID m : monitor) {
+//					System.out.print(" | " + m.getLocalName());
+//				}
+//				System.out.println();
 				
 				atuador = UpdateAgentList.getAgentUpdatedList("atuador", myAgent);
-				System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
-				for (AID a : atuador) {
-					System.out.print(" | " + a.getLocalName());
-				}
-				System.out.println();
+//				System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
+//				for (AID a : atuador) {
+//					System.out.print(" | " + a.getLocalName());
+//				}
+//				System.out.println();
 			}
 		});
 		
@@ -116,7 +120,9 @@ public class AgenteCentralizador extends Agent {
 					}
 					else if (atuador.contains(sender))
 						System.out.println(getLocalName() + ": Msg recebida do atuador " + msg.getSender().getLocalName() + " -->" + msg.getContent());
-					else System.out.println(getLocalName() + ": ERRO: Mensagem recebida do desconhecido");
+					else {
+						System.out.println(getLocalName() + ": ERRO: Mensagem recebida de : " + sender.getLocalName() + "" + msg.getContent());
+					}
 					System.out.println("**********************");
 					System.out.println();
 				}

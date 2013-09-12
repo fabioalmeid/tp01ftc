@@ -4,7 +4,9 @@ import gramatica.Monitor.Absyn.EDados;
 import gramatica.Monitor.Absyn.EDados1;
 import gramatica.Monitor.Absyn.EDados2;
 import gramatica.Monitor.Absyn.EDados3;
-import gramatica.Monitor.Absyn.Hora;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Afericao {
 	private Object dado;
@@ -49,6 +51,14 @@ public class Afericao {
 	}
 	public void setHora1(Integer hora1) {
 		this.hora1 = hora1;
+	}
+	
+	public void setCurrentHora() {
+		Date date = new Date();
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setTime(date);
+		hora1 = calendar.get(Calendar.HOUR_OF_DAY); // formato 24h
+		hora2  = calendar.get(Calendar.MINUTE);
 	}
 	
 	public String getHora() {

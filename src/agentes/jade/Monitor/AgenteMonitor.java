@@ -136,7 +136,7 @@ public class AgenteMonitor extends Agent {
 									}
 								}
 
-							}
+							} else System.out.println(getLocalName() + ": Comando invalido para monitor : " + mensagem);
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}

@@ -27,8 +27,11 @@ import agentes.UpdateAgentList;
 import agentes.jade.Centralizador.GrammarParserCentralizador;
 import agentes.jade.Centralizador.Medicamento;
 import agentes.jade.Centralizador.TarefaCentralizador;
+import agentes.jade.Monitor.Afericao;
+import agentes.jade.Monitor.TarefaMonitor;
 
 public class AgentePaciente extends Agent {
+	private static final long INTERVALO_AGENTES = 5000; // 5s
 	private static final long INTERVALO_ATUALIZACAO = 10000; // 10s
 	private static final int MAX_TICKS_UNCHANGED = 6;
 	private List<AID> monitor;
@@ -49,7 +52,7 @@ public class AgentePaciente extends Agent {
 		}
 		
 		// atualiza lista de monitores e atuadores
-		addBehaviour(new UpdateAgentsTempBehaviour(this, INTERVALO_ATUALIZACAO));
+		addBehaviour(new UpdateAgentsTempBehaviour(this, INTERVALO_AGENTES));
 		
 		// ouve requisicoes dos atuadores e monitores
 		addBehaviour(new ListenBehaviour());
@@ -87,15 +90,38 @@ public class AgentePaciente extends Agent {
 						TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
 						if (tc.getAcao() instanceof ECollect1) { // ECollect1. Coletar ::= "Iniciar Medicao";
 							List<Object> dados = tc.getDados();
+							ArrayList<Afericao> afericoes = new ArrayList<Afericao>();
 							for (Object o : dados) {
-								if (o instanceof EData1)
-									resposta = resposta	+ String.valueOf(Paciente.getTemperatura());
-								else if (o instanceof EData2)
-									resposta = resposta + String.valueOf(Paciente.getHemoglobina());
-								else if (o instanceof EData3)
-									resposta = resposta + String.valueOf(Paciente.getBilirrubina());
-								else if (o instanceof EData4)
-									resposta = resposta + String.valueOf(PressaoArterial.getPressao());
+								if (o instanceof EData1) {
+									Afericao af = new Afericao();
+									af.setDado(new EData1());
+									af.setQuantidade1(Paciente.getTemperatura());
+									af.setCurrentHora();
+									afericoes.add(af);
+								} else if (o instanceof EData2) {
+									Afericao af = new Afericao();
+									af.setDado(new EData2());
+									af.setQuantidade1(Paciente.getHemoglobina());
+									af.setCurrentHora();
+									afericoes.add(af);
+								}
+								else if (o instanceof EData3) {
+									Afericao af = new Afericao();
+									af.setDado(new EData2());
+									af.setQuantidade1(Paciente.getBilirrubina());
+									af.setCurrentHora();
+									afericoes.add(af);
+								}
+								else if (o instanceof EData4) {
+									Afericao af = new Afericao();
+									af.setDado(new EData4());
+									af.setQuantidade1(PressaoArterial.getSist());
+									af.setQuantidade2(PressaoArterial.getDiast());
+									af.setCurrentHora();
+									afericoes.add(af);
+								}
+								TarefaMonitor tm = new TarefaMonitor();
+								resposta = tm.prettyPrinterAfericoes(afericoes);
 							}
 						} else if (tc.getAcao() instanceof EApply1) { // EApply1. Aplicar ::= "Liberar"; 
 							List<Medicamento> med = tc.getMedicacao();
@@ -268,18 +294,18 @@ public class AgentePaciente extends Agent {
 		@Override
 		protected void onTick() {
 			monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
-			System.out.print(getLocalName() + ": Achei os seguintes monitores:");
-			for (AID m : monitor) {
-				System.out.print(" | " + m.getLocalName());
-			}
-			System.out.println();
+//			System.out.print(getLocalName() + ": Achei os seguintes monitores:");
+//			for (AID m : monitor) {
+//				System.out.print(" | " + m.getLocalName());
+//			}
+//			System.out.println();
 			
 			atuador = UpdateAgentList.getAgentUpdatedList("atuador", myAgent);
-			System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
-			for (AID a : atuador) {
-				System.out.print(" | " + a.getLocalName());
-			}
-			System.out.println();
+//			System.out.print(getLocalName() + ": Achei os seguintes atuadores:");
+//			for (AID a : atuador) {
+//				System.out.print(" | " + a.getLocalName());
+//			}
+//			System.out.println();
 		}
 	}
 }
