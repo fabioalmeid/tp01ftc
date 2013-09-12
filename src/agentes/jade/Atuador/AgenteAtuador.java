@@ -1,4 +1,4 @@
-package agentes;
+package agentes.jade.Atuador;
 
 import gramatica.Centralizador.Absyn.ECollect1;
 import gramatica.Centralizador.Absyn.ECollect2;
