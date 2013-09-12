@@ -15,7 +15,7 @@ public class Hora {
 		//int hour212 = calendar.get(Calendar.HOUR);       // formato 12h
 		int minute  = calendar.get(Calendar.MINUTE);
 		
-		String resultado = String.valueOf(hour24) + " h: " + String.valueOf(minute) + " m";
+		String resultado = "as " +  String.valueOf(hour24) + " h: " + String.valueOf(minute) + " m";
 		
 		return resultado;
 	}

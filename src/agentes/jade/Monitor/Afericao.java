@@ -4,6 +4,7 @@ import gramatica.Monitor.Absyn.EDados;
 import gramatica.Monitor.Absyn.EDados1;
 import gramatica.Monitor.Absyn.EDados2;
 import gramatica.Monitor.Absyn.EDados3;
+import gramatica.Monitor.Absyn.Hora;
 
 public class Afericao {
 	private Object dado;
@@ -76,7 +77,7 @@ public class Afericao {
 			pretty.append(String.valueOf(getQuantidade2()));
 			pretty.append(" mmHg ");			
 		}
-		pretty.append(getHora());
+		pretty.append(util.Hora.getPrettyHour());
 		return pretty.toString();
 	}
 	
