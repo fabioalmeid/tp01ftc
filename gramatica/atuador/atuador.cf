@@ -1,0 +1,5 @@
+ETarefa. Tarefa ::= Acao;
+EAcao. Acao ::= "Liberando" Remedio;
+EAcao1. Acao ::= "Cessando Liberacao de" Remedio;
+ERemedio. Remedio::= "Dipirona";
+ERemedio1. Remedio::= "Paracetamol";
