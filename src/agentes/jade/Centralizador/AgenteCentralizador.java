@@ -40,7 +40,6 @@ public class AgenteCentralizador extends Agent {
 	
 	private List<AID> monitor;
 	private List<AID> atuador;
-	int teste =0;
 	
 	private String monitorName, atuadorName;
 	
@@ -81,7 +80,9 @@ public class AgenteCentralizador extends Agent {
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER));
 				// TODO @MARCO 1 - Remover o envio aleatório de mensagem. O centralizador deve de tempo em tempo mandar medir algo (temp ou pressao ou bilirrubina ou etc....)
 				// TODO @MARCO 2 - Baseado na leitura dos dados decidir se para medicao ou se continua medicao e aplica remedio
-				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
+				TarefaCentralizador tc = new TarefaCentralizador();
+				sendMessageToAgent(tc.getRandomStartMeasure(), "monitor" + indexMsg);
+//				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
 //				sendMessageToAgent("Iniciar Medicao Temperatura", "monitor" + indexMsg);
 //				sendMessageToAgent("Iniciar Medicao Hemoglobina", "monitor" + indexMsg);
 //				sendMessageToAgent("Iniciar Medicao bilirrubina", "monitor" + indexMsg);

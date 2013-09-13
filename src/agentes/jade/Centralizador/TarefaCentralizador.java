@@ -1,5 +1,6 @@
 package agentes.jade.Centralizador;
 
+import gramatica.Centralizador.Absyn.Dados;
 import gramatica.Centralizador.Absyn.EApply1;
 import gramatica.Centralizador.Absyn.EApply2;
 import gramatica.Centralizador.Absyn.ECollect1;
@@ -12,12 +13,14 @@ import gramatica.Centralizador.Absyn.ERemedy1;
 import gramatica.Centralizador.Absyn.ERemedy2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-
+import java.util.Map;
 
 public class TarefaCentralizador {
-	private Object acao; 
+	private final int DATA_QUANTITY = 5;
+	
+	private Object acao;	
 	/*possíveis valores
 	 * ECollect1. Coletar ::= "Iniciar Medicao";
 	 * ECollect2. Coletar ::= "Parar medicao";
@@ -109,6 +112,48 @@ public class TarefaCentralizador {
 			}
 		}
 		return pretty.toString();
+	}
+	
+	public String getRandomStartMeasure() {
+		TarefaCentralizador tc = new TarefaCentralizador();
+		
+		// seta iniciar medicao
+		tc.setAcao(new ECollect1());
+
+		int iRandom = (int) (Math.random() * (DATA_QUANTITY));
+		switch (iRandom) {
+		case 0:
+			tc.setDados(new EData1());
+			break;
+		case 1:
+			tc.setDados(new EData2());
+			break;
+		case 2:
+			tc.setDados(new EData3());
+			break;
+		case 3:
+			tc.setDados(new EData4());
+			break;
+		case 4:
+			int iRandom2 = (int) (Math.random() * (DATA_QUANTITY-1));
+			int iRandom3 = (int) (Math.random() * (DATA_QUANTITY-1));
+			
+			Map <Integer, Dados> hm = new HashMap<Integer, Dados>();
+			hm.put(0, new EData1());
+			hm.put(1, new EData2());
+			hm.put(2, new EData3());
+			hm.put(3, new EData4());
+			
+			tc.setDados(hm.get(iRandom2));
+			if (iRandom3 != iRandom2)
+				tc.setDados(hm.get(iRandom3));
+							
+			break;
+		default:
+			System.out.println("Error: Index out of range on TarefaCentralizador");
+			break;
+		}		
+		return tc.prettyPrinterTarefa();
 	}
 
 }
