@@ -65,7 +65,7 @@ public class AgenteCentralizador extends Agent {
 			protected void onTick() {
 				// manda para algum monitor uma mensagem aleatoria
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER));
-				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
+				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
 				
 				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
 				

@@ -176,7 +176,7 @@ public class AgentePaciente extends Agent {
 								if (m.remedio instanceof ERemedy1) {
 									Paciente.setRemedioTemp(true); // Dipirona cures Temperatura and Hemoglobina
 									Paciente.setRemedioHemoglobina(true);
-									System.out.println(getLocalName() + ": Recebi medicacao Dipirona");
+									//System.out.println(getLocalName() + ": Recebi medicacao Dipirona");
 									remedio = new ERemedio();
 									acao = new EAcao(remedio);
 									ta.setAcao(acao);
@@ -185,7 +185,7 @@ public class AgentePaciente extends Agent {
 									// Paracetamol cures Bilirrubina and Pressao Arterial
 									Paciente.setRemedioBilirrubuna(true);
 									Paciente.setRemedioPressao(true);
-									System.out.println(getLocalName() + ": Recebi medicacao Paracetamol");
+									//System.out.println(getLocalName() + ": Recebi medicacao Paracetamol");
 									remedio = new ERemedio1();
 									acao = new EAcao(remedio);
 									ta.setAcao(acao);
@@ -200,7 +200,7 @@ public class AgentePaciente extends Agent {
 								if (m.remedio instanceof ERemedy1) { // Dipirona
 									Paciente.setRemedioTemp(false);
 									Paciente.setRemedioHemoglobina(false);
-									System.out.println(getLocalName() + ": Recebi cessar Dipirona");
+									//System.out.println(getLocalName() + ": Recebi cessar Dipirona");
 									remedio = new ERemedio();
 									acao = new EAcao1(remedio);
 									ta.setAcao(acao);
@@ -209,7 +209,7 @@ public class AgentePaciente extends Agent {
 									// Paracetamol cures Bilirrubina and Pressao Arterial
 									Paciente.setRemedioBilirrubuna(false);
 									Paciente.setRemedioPressao(false);
-									System.out.println(getLocalName() + ": Recebi cessar Pacacetamol");
+									//System.out.println(getLocalName() + ": Recebi cessar Pacacetamol");
 									remedio = new ERemedio1();
 									acao = new EAcao1(remedio);
 									ta.setAcao(acao);
@@ -371,7 +371,7 @@ public class AgentePaciente extends Agent {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
 		message.setContent(mensagem);
-		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		//System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
 		send(message);
 	}
 }

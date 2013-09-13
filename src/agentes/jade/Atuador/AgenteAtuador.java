@@ -106,7 +106,7 @@ public class AgenteAtuador extends Agent {
 							System.out.println(e.getMessage());
 						}
 					}else {
-						System.out.println(getLocalName() + ": Recebi mensagem do PACIENTE!!!!");
+						//System.out.println(getLocalName() + ": Recebi mensagem do PACIENTE!!!!");
 						// mensagem so pode ser do paciente
 						try {
 							TarefaAtuador mensagemRecebida = GrammarParserAtuador.getAtuadorMessageObject(mensagem);
@@ -114,7 +114,7 @@ public class AgenteAtuador extends Agent {
 							mensagemAEnviar.setAcao(mensagemRecebida.getAcao());
 							mensagemAEnviar.setRemedio(mensagemRecebida.getRemedio());
 							sendInformMessageToAgent(mensagemAEnviar.prettyPrinterAction(), "centralizador");							
-							System.out.println(getLocalName() + ": Respondendo centralizador com " + mensagemAEnviar.prettyPrinterAction());
+							//System.out.println(getLocalName() + ": Respondendo centralizador com " + mensagemAEnviar.prettyPrinterAction());
 						} catch (Exception e) {
 							System.out.println(getName()
 											+ ": Mensagem nao pertence a gramatica do atuador: "
@@ -140,7 +140,7 @@ public class AgenteAtuador extends Agent {
 
 		@Override
 		protected void onTick() {
-			System.out.println(getLocalName() + ": " + aclMessage.getContent());
+			//System.out.println(getLocalName() + ": " + aclMessage.getContent());
 			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");			
 		}
 
@@ -152,13 +152,13 @@ public class AgenteAtuador extends Agent {
 
 		public ApplyParacetamolBehaviour(Agent a, ACLMessage aclMessage) {
 			super(a, INTERVAL_FREQUENCY);
-			System.out.println(getLocalName() + ": ApplyParacetamolBehaviour acionado");
+			//System.out.println(getLocalName() + ": ApplyParacetamolBehaviour acionado");
 			this.aclMessage = aclMessage;
 		}
 
 		@Override
 		protected void onTick() {
-			System.out.println(getLocalName() + ": " + aclMessage.getContent());
+			//System.out.println(getLocalName() + ": " + aclMessage.getContent());
 			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");
 		}
 
@@ -169,7 +169,7 @@ public class AgenteAtuador extends Agent {
 		AID agentid = new AID(agentName, AID.ISLOCALNAME);
 		message.addReceiver(agentid);
 		message.setContent(mensagem);
-		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		//System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
 		send(message);
 	}
 	
@@ -177,7 +177,7 @@ public class AgenteAtuador extends Agent {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
 		message.setContent(mensagem);
-		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		//System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
 		send(message);
 	}
 }
