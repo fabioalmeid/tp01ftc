@@ -125,39 +125,9 @@ public class AgentePaciente extends Agent {
 									af.setCurrentHora();
 									afericoes.add(af);
 								}
-								TarefaMonitor tm = new TarefaMonitor();
-								resposta = tm.prettyPrinterAfericoes(afericoes);
 							}
-//						} else if (tc.getAcao() instanceof EApply1) { // EApply1. Aplicar ::= "Liberar"; 
-//							List<Medicamento> med = tc.getMedicacao();
-//							for (Medicamento m : med) {
-//								if (m.remedio instanceof ERemedy1) {
-//									// dipirona sara temperatura e hemoglobina
-//									Paciente.setRemedioTemp(true);
-//									Paciente.setRemedioHemoglobina(true);
-//									resposta = "Dipirona aplicada";
-//								} else if (m.remedio instanceof ERemedy2) {
-//									// paracetamol vai curar bilirrubina e pressao
-//									Paciente.setRemedioBilirrubuna(true);
-//									Paciente.setRemedioPressao(true);
-//									resposta = "Paracetamol aplicado";
-//								}
-//							}
-//
-//						} else if (tc.getAcao() instanceof EApply2) { // EApply2. Aplicar ::= "Cessar Liberacao";
-//							System.out.print("Cessando liberacao da medicacao");
-//							List<Medicamento> med = tc.getMedicacao();
-//							for (Medicamento m : med) {
-//								if (m.remedio instanceof ERemedy1) {
-//									// dipirona sara temperatura e hemoglobina
-//									Paciente.setRemedioTemp(false);
-//									Paciente.setRemedioHemoglobina(false);
-//								} else if (m.remedio instanceof ERemedy2) {
-//									// paracetamol vai curar bilirrubina e pressao
-//									Paciente.setRemedioBilirrubuna(false);
-//									Paciente.setRemedioPressao(false);
-//								}
-//							}
+							TarefaMonitor tm = new TarefaMonitor();
+							resposta = tm.prettyPrinterAfericoes(afericoes);
 						}
 					} catch (Exception e) {
 						System.out.println(e.getMessage());

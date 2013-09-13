@@ -30,8 +30,9 @@ public class AgenteMonitor extends Agent {
 	private static final long serialVersionUID = 1L;
 
 	private ACLMessage ACLmsg;
-	private Boolean isTempRunning, isHemoglobinaRunning, isBilirrubinaRunning, isBloodPressureRunning = false;
-	private Behaviour checkTemperature, checkHemoglobina, checkBilirrubina, checkBloodPressure = null;
+	private Boolean isTempRunning = false, isHemoglobinaRunning = false ,isBilirrubinaRunning = false ,isBloodPressureRunning = false;
+	private Behaviour checkTemperature = null, checkHemoglobina = null, checkBilirrubina = null, checkBloodPressure = null;
+	private static final int TIME_INTERVAL_MEASURE = 2000;
 	
 	/*
 	 * TODO LIST
@@ -151,23 +152,21 @@ public class AgenteMonitor extends Agent {
 	
 	// MONITOR informs to Centralizador a given temperature at each 2s
 	class InformTempBehaviour extends TickerBehaviour {
+		
 		private static final long serialVersionUID = 1L;
 		private ACLMessage aclMessage;
 
 		public InformTempBehaviour(Agent a, ACLMessage aclMessage) {
-			super(a, 2000);
+			super(a, TIME_INTERVAL_MEASURE);
 			this.aclMessage = aclMessage;
-			System.out.println("Monitor: aclMessage********************************" + aclMessage);
+			//System.out.println("Monitor: aclMessage********************************" + aclMessage);
 		}
 
 		@Override
 		protected void onTick() {
-			int Min = 36;
-			int Max = 41;
-			int temperatura = Min + (int) (Math.random() * ((Max - Min) + 1));
-			String resposta = "Temperatura de " + temperatura + " C as 19 h: 59 m";
-			System.out.println("Monitor: msgtoSend para Centralizador  >>>>> " + resposta);
-			sendMsgtoCentralizador(aclMessage, resposta);
+			System.out.println(getLocalName() + ": Enviando ao paciente : " + aclMessage.getContent());
+			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");
+			//sendMsgtoCentralizador(aclMessage, resposta);
 		}
 	}
 
@@ -178,19 +177,14 @@ public class AgenteMonitor extends Agent {
 		private ACLMessage aclMessage;
 
 		public InformHemoglobinaBehaviour(Agent a, ACLMessage aclMessage) {
-			super(a, 2000);
+			super(a, TIME_INTERVAL_MEASURE);
 			this.aclMessage = aclMessage;
-			System.out.println("Monitor: aclMessage********************************" + aclMessage);
+			//System.out.println("Monitor: aclMessage********************************" + aclMessage);
 		}
 
 		@Override
 		protected void onTick() {
-			int Min = 36;
-			int Max = 41;
-			int unit = Min + (int) (Math.random() * ((Max - Min) + 1)); //REMOVE this random from all classes
-			String resposta = "Hemoglobina  " + unit + " mg/dL as 19 h: 59 m";
-			System.out.println("Monitor: msgtoSend para Centralizador  >>>>> "+ resposta);
-			sendMsgtoCentralizador(aclMessage, resposta);
+			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");
 		}
 	}
 
@@ -201,19 +195,14 @@ public class AgenteMonitor extends Agent {
 		private ACLMessage aclMessage;
 
 		public InformBilirrubinaBehaviour(Agent a, ACLMessage aclMessage) {
-			super(a, 2000);
+			super(a, TIME_INTERVAL_MEASURE);
 			this.aclMessage = aclMessage;
-			System.out.println("Monitor: aclMessage********************************" + aclMessage);
+			//System.out.println("Monitor: aclMessage********************************" + aclMessage);
 		}
 
 		@Override
 		protected void onTick() {
-			int Min = 36;
-			int Max = 41;
-			int unit = Min + (int) (Math.random() * ((Max - Min) + 1)); // //REMOVE this random from all classes
-			String resposta = "Bilirrubina  " + unit + " g/dL as 19 h: 59 m";
-			System.out.println("Monitor: msgtoSend para Centralizador  >>>>> " + resposta);
-			sendMsgtoCentralizador(aclMessage, resposta);
+			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");
 		}
 	}
 
@@ -224,27 +213,39 @@ public class AgenteMonitor extends Agent {
 		private ACLMessage aclMessage;
 
 		public InformBloodPressureBehaviour(Agent a, ACLMessage aclMessage) {
-			super(a, 2000);
+			super(a, TIME_INTERVAL_MEASURE);
 			this.aclMessage = aclMessage;
-			System.out.println("Monitor: aclMessage********************************" + aclMessage);
+			//System.out.println("Monitor: aclMessage********************************" + aclMessage);
 		}
 
 		@Override
 		protected void onTick() {
-			int Min = 36;
-			int Max = 41;
-			int unit = Min + (int) (Math.random() * ((Max - Min) + 1)); // ///REMOVE this random from all classes
-			String resposta = "Pressao Arterial  " + unit + " mmHg as 19 h: 59 m";
-			System.out.println("Monitor: msgtoSend para Centralizador  >>>>> " + resposta);
-			sendMsgtoCentralizador(aclMessage, resposta);
+			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");
 		}
 	}
-
-	private void sendMsgtoCentralizador(ACLMessage msg, String msgToSend) {
-		ACLMessage replica = msg.createReply();
-		replica.setPerformative(ACLMessage.INFORM);
-		replica.setContent(msgToSend);
-		send(replica);
-
+	
+	private void sendInformMessageToAgent(String mensagem, String agentName) {
+		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+		AID agentid = new AID(agentName, AID.ISLOCALNAME);
+		message.addReceiver(agentid);
+		message.setContent(mensagem);
+		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		send(message);
 	}
+	
+	private void sendRequestMessageToAgent(String mensagem, String agentName) {
+		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
+		message.setContent(mensagem);
+		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		send(message);
+	}
+
+//	private void sendMsgtoCentralizador(ACLMessage msg, String msgToSend) {
+//		ACLMessage replica = msg.createReply();
+//		replica.setPerformative(ACLMessage.INFORM);
+//		replica.setContent(msgToSend);
+//		send(replica);
+//
+//	}
 }

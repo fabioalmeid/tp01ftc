@@ -43,7 +43,7 @@ public class AgenteCentralizador extends Agent {
 	 * */
 	
 	public void setup() {
-		System.out.println("Centralizador: Sou o agente monitor " + getAID().getLocalName() + " e estou pronto.");
+		System.out.println(getLocalName() +  ": Sou o agente " + getAID().getLocalName() + " e estou pronto.");
 
 		// create agent t1 on the same container of the creator agent
 		AgentContainer container = (AgentContainer) getContainerController();
@@ -66,11 +66,11 @@ public class AgenteCentralizador extends Agent {
 				// manda para algum monitor uma mensagem aleatoria
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER));
 				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
+				if (teste==0)
+					sendMessageToAgent("Iniciar Medicao Temperatura", "monitor" + indexMsg);
+				teste++;
 				
-				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
-				
-//				if (teste==0)
-//					sendMessageToAgent("Liberar 6 Paracetamol", "atuador0");
+				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
 				
 				monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
 //				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
