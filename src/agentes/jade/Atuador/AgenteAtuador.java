@@ -15,6 +15,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.tools.sniffer.Message;
 
 import java.util.List;
 
@@ -104,10 +105,21 @@ public class AgenteAtuador extends Agent {
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
-					}
-					else {
-						sendMessageToAgent(mensagem, "centralizador");
-						System.out.println(getLocalName() + ": Respondendo centralizador com " + mensagem);
+					}else {
+						System.out.println(getLocalName() + ": Recebi mensagem do PACIENTE!!!!");
+						// mensagem so pode ser do paciente
+						try {
+							TarefaAtuador mensagemRecebida = GrammarParserAtuador.getAtuadorMessageObject(mensagem);
+							TarefaAtuador mensagemAEnviar = new TarefaAtuador();
+							mensagemAEnviar.setAcao(mensagemRecebida.getAcao());
+							mensagemAEnviar.setRemedio(mensagemRecebida.getRemedio());
+							sendInformMessageToAgent(mensagemAEnviar.prettyPrinterAction(), "centralizador");							
+							System.out.println(getLocalName() + ": Respondendo centralizador com " + mensagemAEnviar.prettyPrinterAction());
+						} catch (Exception e) {
+							System.out.println(getName()
+											+ ": Mensagem nao pertence a gramatica do atuador: "
+											+ mensagem + ". Erro: " + e.getMessage());
+						}
 					}
 				}
 			}
@@ -129,7 +141,7 @@ public class AgenteAtuador extends Agent {
 		@Override
 		protected void onTick() {
 			System.out.println(getLocalName() + ": " + aclMessage.getContent());
-			sendMessageToAgent(aclMessage.getContent(), "paciente");			
+			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");			
 		}
 
 	}
@@ -147,12 +159,21 @@ public class AgenteAtuador extends Agent {
 		@Override
 		protected void onTick() {
 			System.out.println(getLocalName() + ": " + aclMessage.getContent());
-			sendMessageToAgent(aclMessage.getContent(), "paciente");
+			sendRequestMessageToAgent(aclMessage.getContent(), "paciente");
 		}
 
 	}
 	
-	private void sendMessageToAgent(String mensagem, String agentName) {
+	private void sendInformMessageToAgent(String mensagem, String agentName) {
+		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+		AID agentid = new AID(agentName, AID.ISLOCALNAME);
+		message.addReceiver(agentid);
+		message.setContent(mensagem);
+		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		send(message);
+	}
+	
+	private void sendRequestMessageToAgent(String mensagem, String agentName) {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
 		message.setContent(mensagem);

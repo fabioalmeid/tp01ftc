@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 
-public class GrammarParserAtualizador {
+public class GrammarParserAtuador {
 	public static TarefaAtuador getAtuadorMessageObject(String message) throws Exception{
 		TarefaAtuador tarefaObject = null;
 		

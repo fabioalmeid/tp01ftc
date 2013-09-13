@@ -16,7 +16,7 @@ public class ExemploParserGramaticaAtuador {
 		for (String s : mensagens) {
 			System.out.println("mensagem:\n" + s);
 			try { // simula o monitor recebendo e validando a mensagem
-				TarefaAtuador ta = GrammarParserAtualizador.getAtuadorMessageObject(s);
+				TarefaAtuador ta = GrammarParserAtuador.getAtuadorMessageObject(s);
 				System.out.println(ta.prettyPrinterAction());
 				System.out.println("\n-------------------");	
 			} catch (Exception e){

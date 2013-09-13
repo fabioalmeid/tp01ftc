@@ -82,18 +82,13 @@ public class AgentePaciente extends Agent {
 
 		@Override
 		public void action() {
-			ACLMessage ACLmsg = receive(MessageTemplate
-					.MatchPerformative(ACLMessage.REQUEST));
+			ACLMessage ACLmsg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
 
 			if (ACLmsg != null) {
 				String mensagem = ACLmsg.getContent().toString();
 				AID sender = ACLmsg.getSender();
 				String resposta = "";
 				
-				TarefaAtuador ta = new TarefaAtuador();
-				Remedio remedio = null;
-				Acao acao = null;				
-
 				// se o sender for monitor
 				if (monitor.contains(sender)) {
 					try {
@@ -168,6 +163,10 @@ public class AgentePaciente extends Agent {
 						System.out.println(e.getMessage());
 					}
 				} else if (atuador.contains(sender)) {
+					TarefaAtuador ta = new TarefaAtuador();
+					Remedio remedio  = null;
+					Acao acao        = null;
+					
 					try {
 						TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
 						if (tc.getAcao() instanceof EApply1) { // Aplicar
@@ -188,7 +187,7 @@ public class AgentePaciente extends Agent {
 									Paciente.setRemedioPressao(true);
 									System.out.println(getLocalName() + ": Recebi medicacao Paracetamol");
 									remedio = new ERemedio1();
-									acao = new EAcao1(remedio);
+									acao = new EAcao(remedio);
 									ta.setAcao(acao);
 									ta.setRemedio(remedio);
 								}
@@ -203,7 +202,7 @@ public class AgentePaciente extends Agent {
 									Paciente.setRemedioHemoglobina(false);
 									System.out.println(getLocalName() + ": Recebi cessar Dipirona");
 									remedio = new ERemedio();
-									acao = new EAcao(remedio);
+									acao = new EAcao1(remedio);
 									ta.setAcao(acao);
 									ta.setRemedio(remedio);
 								} else if (m.remedio instanceof ERemedy2) { // Paracetamol
@@ -217,17 +216,14 @@ public class AgentePaciente extends Agent {
 									ta.setRemedio(remedio);
 								}
 							}
-							resposta = ta.prettyPrinterAction();
 						} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
+						resposta = ta.prettyPrinterAction();
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
 					}
 				}
-
-				ACLMessage replica = ACLmsg.createReply();
-				replica.setPerformative(ACLMessage.INFORM);
-				replica.setContent(resposta);
-				send(replica);
+				
+				sendMessageToAgent(resposta, ACLmsg.getSender().getLocalName());
 			}
 		}		
 	}
@@ -256,13 +252,12 @@ public class AgentePaciente extends Agent {
 					Paciente.setTemperatura(randomTemperature());
 					ticks = 0;
 				}
-			}
-			
+			}			
 		}
 	}
 	
+	int ticks = 0;
 	class UpdateHemoglobinaBehaviour extends TickerBehaviour {
-		int ticks = 0;
 		
 		public UpdateHemoglobinaBehaviour(Agent a, long period) {
 			super(a, period);
@@ -371,4 +366,13 @@ public class AgentePaciente extends Agent {
 //			System.out.println();
 		}
 	}
+	
+	private void sendMessageToAgent(String mensagem, String agentName) {
+		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
+		message.setContent(mensagem);
+		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		send(message);
+	}
 }
+

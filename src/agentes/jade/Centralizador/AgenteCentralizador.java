@@ -13,6 +13,7 @@ import jade.wrapper.StaleProxyException;
 import java.util.ArrayList;
 import java.util.List;
 
+import util.GeradorAleatorioMsg;
 import agentes.UpdateAgentList;
 import agentes.jade.Monitor.Afericao;
 import agentes.jade.Monitor.GrammarParserMonitor;
@@ -21,10 +22,11 @@ import agentes.jade.Monitor.TarefaMonitor;
 public class AgenteCentralizador extends Agent {
 	private static final int INICIO_FEBRE = 38;
 	private static final int INTERVALO_REQUISICAO = 10000;
-	private final int AGENTSNUMBER = 2;
+	private final int AGENTSNUMBER = 1;
 	
 	private List<AID> monitor;
 	private List<AID> atuador;
+	int teste =0;
 	
 	private String monitorName, atuadorName;
 	
@@ -34,6 +36,10 @@ public class AgenteCentralizador extends Agent {
 	 * TODO Implementar geração automatica de mensagens randomicas a partir da gramatica
 	 * TODO Implementar logica de decisao do centralizador
 	 * TODO Implementar armazenamento e tabulacao dos dados no centralizador
+	 * TODO Centralizador precisa saber de tudo que está fazendo, exemplos:
+	 * 1 - Estou aplicando remedios agora? quais? Não vou pedir para aplciar a mesma coisa se já estou aplicando
+	 * 2 - Estou medindo alguma cosia agora? o que? Nao vou pedir para medir a mesma coisa se já estou medindo
+	 * 
 	 * */
 	
 	public void setup() {
@@ -58,12 +64,13 @@ public class AgenteCentralizador extends Agent {
 		addBehaviour(new TickerBehaviour(this, INTERVALO_REQUISICAO) {
 			protected void onTick() {
 				// manda para algum monitor uma mensagem aleatoria
-				int indexMsg = (int) (Math.random() * (AGENTSNUMBER-1));
-				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizador(), "monitor" + indexMsg);
+				int indexMsg = (int) (Math.random() * (AGENTSNUMBER));
+				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
 				
-				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizador(), "atuador" + indexMsg);
+				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
 				
-				sendMessageToAgent("Liberar 8 Dipirona", "atuador" + indexMsg);
+//				if (teste==0)
+//					sendMessageToAgent("Liberar 6 Paracetamol", "atuador0");
 				
 				monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
 //				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
@@ -114,12 +121,12 @@ public class AgenteCentralizador extends Agent {
 						}
 					}
 					else if (atuador.contains(sender))
-						System.out.println(getLocalName() + ": Msg recebida do atuador " + msg.getSender().getLocalName() + " -->" + msg.getContent());
+						System.out.println(getLocalName() + ": Msg recebida do " + msg.getSender().getLocalName() + " -->" + msg.getContent());
 					else {
 						System.out.println(getLocalName() + ": ERRO: Mensagem recebida de : " + sender.getLocalName() + "" + msg.getContent());
 					}
-					System.out.println("**********************");
-					System.out.println();
+//					System.out.println("**********************");
+//					System.out.println();
 				}
 
 			}
