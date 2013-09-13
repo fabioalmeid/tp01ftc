@@ -1,6 +1,9 @@
 package agentes.jade.Centralizador;
 
 import gramatica.Monitor.Absyn.EDados;
+import gramatica.Monitor.Absyn.EDados1;
+import gramatica.Monitor.Absyn.EDados2;
+import gramatica.Monitor.Absyn.EDados3;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -20,6 +23,18 @@ import agentes.jade.Monitor.TarefaMonitor;
 
 public class AgenteCentralizador extends Agent {
 	private static final int INICIO_FEBRE = 38;
+	private static final int MIN_PRESSAO_DIAS = 50;
+	private static final int MIN_PRESSAO_SIST = 90;
+	private static final int MAX_PRESSAO_DIAS = 130;
+	private static final int MAX_PRESSAO_SIST = 200;
+	private final static int MIN_TEMP = 35;
+	private final static int MAX_TEMP = 40;
+	private final static int MIN_HEMO = 9;
+	private final static int MAX_HEMO = 23;
+	private final static int MIN_BILI = 0;
+	private final static int MAX_BILI = 14;
+	
+	
 	private static final int INTERVALO_REQUISICAO = 8000;
 	private final int AGENTSNUMBER = 1;
 	
@@ -67,8 +82,17 @@ public class AgenteCentralizador extends Agent {
 				// TODO @MARCO 1 - Remover o envio aleatório de mensagem. O centralizador deve de tempo em tempo mandar medir algo (temp ou pressao ou bilirrubina ou etc....)
 				// TODO @MARCO 2 - Baseado na leitura dos dados decidir se para medicao ou se continua medicao e aplica remedio
 				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
+//				sendMessageToAgent("Iniciar Medicao Temperatura", "monitor" + indexMsg);
+//				sendMessageToAgent("Iniciar Medicao Hemoglobina", "monitor" + indexMsg);
+//				sendMessageToAgent("Iniciar Medicao bilirrubina", "monitor" + indexMsg);
+//				sendMessageToAgent("Iniciar Medicao Temperatura e Hemoglobina", "monitor" + indexMsg);
+//				sendMessageToAgent("Iniciar Medicao Hemoglobina e bilirrubina e Temperatura", "monitor" + indexMsg);
+//				sendMessageToAgent("Parar medicao Temperatura", "monitor" + indexMsg);
+//				sendMessageToAgent("Parar medicao bilirrubina", "monitor" + indexMsg);
+//				sendMessageToAgent("Parar medicao Temperatura e bilirrubina", "monitor" + indexMsg);
+				
 		
-				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
+				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
 				
 				monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
 //				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
@@ -111,9 +135,24 @@ public class AgenteCentralizador extends Agent {
 									if (af.getQuantidade1() > INICIO_FEBRE)
 										System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio.NAO IMPLEMENTADO\n");
 									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio.NAO IMPLEMENTADO\n");
+								} if (af.getDado() instanceof EDados2) { // veja gramatica para EDados
+									// TODO @MARCO 4 - Implementar decisao de parar medicao de hemoglob ou continuar medicao e aplicar remedio 									
+									if ((af.getQuantidade1() >= 13) && (af.getQuantidade1() <= 20))
+										System.out.println(getLocalName() + ": " + sender.getLocalName() + " hemoglobina boa, nao precisa remedio.NAO IMPLEMENTADO\n");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com hemoglobina ruim, devo aplicar remedio.NAO IMPLEMENTADO\n");
+								} if (af.getDado() instanceof EDados1) { // veja gramatica para EDados
+									// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio 									
+									if ((af.getQuantidade1() > 4) && (af.getQuantidade1() < 11))
+										System.out.println(getLocalName() + ": " + sender.getLocalName() + " bilirrubina boa, nao precisa remedio.NAO IMPLEMENTADO\n");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO\n");
+								} if (af.getDado() instanceof EDados3) { // veja gramatica para EDados
+									// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio 									
+									if ((af.getQuantidade1() <= 140) || (af.getQuantidade2() <= 160))
+										System.out.println(getLocalName() + ": " + sender.getLocalName() + " pressao arterial boa, nao precisa remedio.NAO IMPLEMENTADO\n");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com pressao arterial ruim, devo aplicar remedio.NAO IMPLEMENTADO\n");
 								}
-								// TODO @MARCO 4 - Implementar decisao de parar medicao de hemoglob ou continuar medicao e aplicar remedio
-								// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio
+								
+
 								// TODO @MARCO 6 - Implementar decisao de parar medicao de pressao art ou continuar medicao e aplicar remedio
 								
 							}
