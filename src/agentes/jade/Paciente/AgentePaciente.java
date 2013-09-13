@@ -34,7 +34,8 @@ import jade.lang.acl.MessageTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-import agentes.UpdateAgentList;
+import util.UpdateAgentList;
+
 import agentes.jade.Atuador.TarefaAtuador;
 import agentes.jade.Centralizador.GrammarParserCentralizador;
 import agentes.jade.Centralizador.Medicamento;

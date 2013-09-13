@@ -16,7 +16,7 @@ import jade.wrapper.StaleProxyException;
 import java.util.List;
 
 import util.GeradorAleatorioMsg;
-import agentes.UpdateAgentList;
+import util.UpdateAgentList;
 import agentes.jade.Monitor.Afericao;
 import agentes.jade.Monitor.GrammarParserMonitor;
 import agentes.jade.Monitor.TarefaMonitor;
@@ -119,10 +119,11 @@ public class AgenteCentralizador extends Agent {
 				if (msg != null) {
 					// quem enviou a mensagem?
 					AID sender = msg.getSender();
-
+					
 					// se o sender for monitor
 					if (monitor.contains(sender)) {
-						System.out.println(getLocalName() + ": Msg recebida do monitor " + msg.getSender().getLocalName() + " -->" + msg.getContent());
+						System.out.println(getLocalName() + ": " + msg.getSender().getLocalName() + " respondeu " + msg.getContent());
+						//System.out.println(getLocalName() + ": Msg recebida do monitor " + msg.getSender().getLocalName() + " -->" + msg.getContent());
 						// valida mensagem
 						TarefaMonitor tm = new TarefaMonitor();
 						try {
@@ -133,23 +134,23 @@ public class AgenteCentralizador extends Agent {
 								if (af.getDado() instanceof EDados) { // veja gramatica para EDados
 									// TODO @MARCO 3 - Implementar decisao de parar medicao de temp ou continuar medicao e aplicar remedio 									
 									if (af.getQuantidade1() > INICIO_FEBRE)
-										System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio.NAO IMPLEMENTADO\n");
-									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio.NAO IMPLEMENTADO\n");
+										System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio.NAO IMPLEMENTADO");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio.NAO IMPLEMENTADO");
 								} if (af.getDado() instanceof EDados2) { // veja gramatica para EDados
 									// TODO @MARCO 4 - Implementar decisao de parar medicao de hemoglob ou continuar medicao e aplicar remedio 									
 									if ((af.getQuantidade1() >= 13) && (af.getQuantidade1() <= 20))
-										System.out.println(getLocalName() + ": " + sender.getLocalName() + " hemoglobina boa, nao precisa remedio.NAO IMPLEMENTADO\n");
-									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com hemoglobina ruim, devo aplicar remedio.NAO IMPLEMENTADO\n");
+										System.out.println(getLocalName() + ": " + sender.getLocalName() + " hemoglobina boa, nao precisa remedio.NAO IMPLEMENTADO");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com hemoglobina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
 								} if (af.getDado() instanceof EDados1) { // veja gramatica para EDados
 									// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio 									
 									if ((af.getQuantidade1() > 4) && (af.getQuantidade1() < 11))
 										System.out.println(getLocalName() + ": " + sender.getLocalName() + " bilirrubina boa, nao precisa remedio.NAO IMPLEMENTADO\n");
-									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO\n");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
 								} if (af.getDado() instanceof EDados3) { // veja gramatica para EDados
 									// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio 									
 									if ((af.getQuantidade1() <= 140) || (af.getQuantidade2() <= 160))
-										System.out.println(getLocalName() + ": " + sender.getLocalName() + " pressao arterial boa, nao precisa remedio.NAO IMPLEMENTADO\n");
-									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com pressao arterial ruim, devo aplicar remedio.NAO IMPLEMENTADO\n");
+										System.out.println(getLocalName() + ": " + sender.getLocalName() + " pressao arterial boa, nao precisa remedio.NAO IMPLEMENTADO");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com pressao arterial ruim, devo aplicar remedio.NAO IMPLEMENTADO");
 								}
 								
 
@@ -163,7 +164,7 @@ public class AgenteCentralizador extends Agent {
 					else if (atuador.contains(sender))
 						System.out.println(getLocalName() + ": Msg recebida do " + msg.getSender().getLocalName() + " -->" + msg.getContent());
 					else {
-						System.out.println(getLocalName() + ": ERRO: Mensagem recebida de : " + sender.getLocalName() + "" + msg.getContent());
+						System.out.println(getLocalName() + ": " + sender.getLocalName() + ", " + msg.getContent());
 					}
 //					System.out.println("**********************");
 //					System.out.println();
@@ -187,9 +188,11 @@ public class AgenteCentralizador extends Agent {
 
 	private void sendMessageToAgent(String mensagem, String agentName) {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-		message.addReceiver(new AID(agentName, AID.ISLOCALNAME));
+		AID receiver = new AID(agentName, AID.ISLOCALNAME);
+		message.addReceiver(receiver);
 		message.setContent(mensagem);
-		System.out.println(getLocalName() + ": Enviei mensagem para " + agentName + " : " + mensagem);
+		System.out.println(getLocalName() + ": " + receiver.getLocalName() + ", " + message.getContent());
+		//System.out.println(getLocalName() + "para " + agentName + " : " + mensagem);
 		send(message);
 	}
 }

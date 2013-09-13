@@ -71,27 +71,27 @@ public class AgenteMonitor extends Agent {
 						try {
 							TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
 							if (tc.getAcao() instanceof ECollect1) { // veja na gramatica o que significa ECollect1
-								System.out.print(getLocalName() + ": Iniciando a medicao");
+								//System.out.print(getLocalName() + ": Iniciando a medicao");
 								List<Object> dados = tc.getDados();
 								for (Object o : dados) {
 									if (o instanceof EData1) { // TEMPERATURE
-										System.out.print(" Temperatura\n");
+										//System.out.print(" Temperatura");
 										if (!isTempRunning) {
 											checkTemperature = new InformTempBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkTemperature);
 											isTempRunning = true;
 										} else
-											System.out.println(getLocalName() + " ja esta monitorando temperatura.");
+											System.out.print(getLocalName() + " ja esta monitorando temperatura.");
 									} else if (o instanceof EData2) { // HEMOGLOBINA
-										System.out.print(" Hemoglobina\n");
+										//System.out.print(" Hemoglobina");
 										if (!isHemoglobinaRunning) {
 											checkHemoglobina = new InformHemoglobinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkHemoglobina);
 											isHemoglobinaRunning = true;
 										} else
-											System.out.println(getLocalName() + " ja esta monitorando Hemoglobina.");
+											System.out.print(getLocalName() + " ja esta monitorando Hemoglobina.");
 									} else if (o instanceof EData3) { // BILIRRUBINA
-										System.out.print(" Bilirrubina\n");
+										//System.out.print(" Bilirrubina");
 										if (!isBilirrubinaRunning) {
 											checkBilirrubina = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkBilirrubina);
@@ -99,7 +99,7 @@ public class AgenteMonitor extends Agent {
 										} else
 											System.out.println(getLocalName() + " ja esta monitorando Bilirrubina.");
 									} else if (o instanceof EData4) { // PRESSAO ARTERIAL
-										System.out.print(" Pressao Arterial\n");
+										//System.out.print(" Pressao Arterial");
 										if (!isBloodPressureRunning) {
 											checkBloodPressure = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkBloodPressure);
@@ -107,31 +107,31 @@ public class AgenteMonitor extends Agent {
 										} else
 											System.out .println(getLocalName() + " ja esta monitorando Pressao Arterial.");
 									}
-								}
+								} //System.out.println("");
 							} else if (tc.getAcao() instanceof ECollect2) {
-								System.out.print(getLocalName() + ": Parando medicao");
+								//System.out.print(getLocalName() + ": Parando medicao");
 								List<Object> dados = tc.getDados();
 								for (Object o : dados) {
 									if (o instanceof EData1) {
-										System.out.print(" Temperatura\n");
+										//System.out.print(" Temperatura\n");
 										if (isTempRunning) {
 											removeBehaviour(checkTemperature);
 										} else
 											System.out.println(getLocalName() + " nao esta monitorando Temperatura.");
 									} else if (o instanceof EData2) {
-										System.out.print(" Hemoglobina\n");
+										//System.out.print(" Hemoglobina\n");
 										if (isHemoglobinaRunning) {
 											removeBehaviour(checkHemoglobina);
 										} else
 											System.out.println(getLocalName() + " nao esta monitorando Hemoglobina.");
 									} else if (o instanceof EData3) {
-										System.out.print(" bilirrubina\n");
+										//System.out.print(" bilirrubina\n");
 										if (isBilirrubinaRunning) {
 											removeBehaviour(checkBilirrubina);
 										} else
 											System.out.println(getLocalName() + " nao esta monitorando Bilirrubina.");
 									} else if (o instanceof EData4) {
-										System.out.print(" Pressao Arterial\n");
+										//System.out.print(" Pressao Arterial\n");
 										if (isBloodPressureRunning) {
 											removeBehaviour(checkBloodPressure);
 										} else
@@ -152,7 +152,7 @@ public class AgenteMonitor extends Agent {
 								mensagemAEnviar.setAfericoes(af);
 							}
 							sendInformMessageToAgent(mensagemAEnviar.prettyPrinter(), "centralizador");							
-							//System.out.println(getLocalName() + ": Respondendo centralizador com " + mensagemAEnviar.prettyPrinterAction());
+							System.out.println(getLocalName() + ": " + mensagemAEnviar.prettyPrinter());
 						} catch (Exception e) {
 							System.out.println(getName()
 											+ ": Mensagem nao pertence a gramatica do atuador: "
