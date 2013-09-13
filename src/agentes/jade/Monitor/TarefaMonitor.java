@@ -1,10 +1,11 @@
 package agentes.jade.Monitor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TarefaMonitor {
 	//private List<Afericao> afericoes = new ArrayList<Afericao>();
-	private ArrayList<ArrayList<Afericao>> listaDeListaAfericoes = new ArrayList<ArrayList<Afericao>>();
+	private List<Afericao> afericoes = new ArrayList<Afericao>();
 	/*possíveis valores
 	 * EAcao. Acao ::= Dados "as" Hora;
 	 * EAcao2. Acao ::= Acao  Operador Acao;
@@ -15,32 +16,23 @@ public class TarefaMonitor {
 	 * E qualquer concatenação de duas ou mais ações
 	 * */
 
-	public ArrayList<ArrayList<Afericao>> getListaDeListaAfericoes() {
-		return listaDeListaAfericoes;
+	public List<Afericao> getAfericoes() {
+		return afericoes;
 	}
 
-	public void setListaDeListaAfericoes(ArrayList<ArrayList<Afericao>> listaDeListaAfericoes) {
-		this.listaDeListaAfericoes = listaDeListaAfericoes;
+	public void setAfericoes(List<Afericao> afericoes) {
+		this.afericoes = afericoes;
 	}
 	
-	public String prettyPrinterListaAfericoes() {
+	public void setAfericoes(Afericao afericao) {
+		this.afericoes.add(afericao);
+	}
+
+	public String prettyPrinter() {
 		StringBuilder pretty = new StringBuilder();
 		
 		int cont = 0;
-		for (ArrayList<Afericao> singleList : getListaDeListaAfericoes()) {
-			if (cont > 0) pretty.append("\n");
-			pretty.append(prettyPrinterAfericoes(singleList));
-			cont++;
-		}
-		
-		return pretty.toString();
-	}
-	
-	public String prettyPrinterAfericoes(ArrayList<Afericao> afericoes) {
-		StringBuilder pretty = new StringBuilder();
-
-		int cont = 0;
-		for (Afericao af : afericoes) {
+		for (Afericao af : getAfericoes()) {
 			if (cont > 0) pretty.append(" e ");
 			pretty.append(af.prettyPrinter());
 			cont++;

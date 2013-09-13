@@ -14,7 +14,7 @@ public class ExemploParserGramaticaMonitor {
 		try {
 			System.out.println("mensagem recebida do monitor:\n" + mens);
 			tm = GrammarParserMonitor.getMonitorMessageObject(mens);
-			System.out.println(tm.prettyPrinterListaAfericoes());
+			System.out.println(tm.prettyPrinter());
 			System.out.println("\n-------------------");
 		} catch (Exception e){
 			System.out.println(e.getMessage());
@@ -35,7 +35,7 @@ public class ExemploParserGramaticaMonitor {
 			TarefaMonitor t = new TarefaMonitor();
 			try {
 				t = GrammarParserMonitor.getMonitorMessageObject(s);
-				System.out.println(t.prettyPrinterListaAfericoes());
+				System.out.println(t.prettyPrinter());
 				System.out.println("-------------------\n");
 			} catch (Exception e){
 				System.out.println(e.getMessage());

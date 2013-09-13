@@ -8,24 +8,22 @@ import gramatica.Monitor.Absyn.Quantidade;
 import gramatica.Monitor.Absyn.Tarefa;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VisitanteMonitor {
-	ArrayList<ArrayList<Afericao>> listOfLists = new ArrayList<ArrayList<Afericao>>();
-	private ArrayList<Afericao> singleList;
+	List<Afericao> afericoes;
 
-	public ArrayList<ArrayList<Afericao>> getAfericoes() {
-		return listOfLists;
+	public List<Afericao> getAfericoes() {
+		return afericoes;
 	}
 
 	public class TarefaVisitor<R, A> implements Tarefa.Visitor<R, A> {
 		public R visit(gramatica.Monitor.Absyn.ETarefa p, A arg) {
 			/* Code For ETarefa Goes Here */
-			singleList = new ArrayList<Afericao>(); 
+			afericoes = new ArrayList<Afericao>(); 
 
 			p.acao_.accept(new AcaoVisitor<R, A>(), arg);
 			
-			listOfLists.add(singleList);
-
 			return null;
 		}
 
@@ -42,7 +40,7 @@ public class VisitanteMonitor {
 			
 			afericao.setHora1(hora[0]);
 			afericao.setHora2(hora[1]);
-			singleList.add(afericao);
+			afericoes.add(afericao);
 			
 
 			return null;

@@ -10,7 +10,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.StaleProxyException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import util.GeradorAleatorioMsg;
@@ -21,7 +20,7 @@ import agentes.jade.Monitor.TarefaMonitor;
 
 public class AgenteCentralizador extends Agent {
 	private static final int INICIO_FEBRE = 38;
-	private static final int INTERVALO_REQUISICAO = 10000;
+	private static final int INTERVALO_REQUISICAO = 8000;
 	private final int AGENTSNUMBER = 1;
 	
 	private List<AID> monitor;
@@ -65,12 +64,11 @@ public class AgenteCentralizador extends Agent {
 			protected void onTick() {
 				// manda para algum monitor uma mensagem aleatoria
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER));
-				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
-				if (teste==0)
-					sendMessageToAgent("Iniciar Medicao Temperatura", "monitor" + indexMsg);
-				teste++;
-				
-				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
+				// TODO @MARCO 1 - Remover o envio aleatório de mensagem. O centralizador deve de tempo em tempo mandar medir algo (temp ou pressao ou bilirrubina ou etc....)
+				// TODO @MARCO 2 - Baseado na leitura dos dados decidir se para medicao ou se continua medicao e aplica remedio
+				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
+		
+				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
 				
 				monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
 //				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
@@ -105,16 +103,19 @@ public class AgenteCentralizador extends Agent {
 						TarefaMonitor tm = new TarefaMonitor();
 						try {
 							tm = GrammarParserMonitor.getMonitorMessageObject(msg.getContent());
-							ArrayList<ArrayList<Afericao>> listaAF = tm.getListaDeListaAfericoes();
+							List<Afericao> afericoes = tm.getAfericoes();
 							// exemplo de tratamento para temperatura
-							for (ArrayList<Afericao> afericoes : listaAF) {
-								for (Afericao af : afericoes) {
-									if (af.getDado() instanceof EDados) { // veja gramatica para EDados
-										if (af.getQuantidade1() > INICIO_FEBRE)
-											System.out.print(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio");
-										else System.out.print(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio");
-									}
+							for (Afericao af : afericoes) {
+								if (af.getDado() instanceof EDados) { // veja gramatica para EDados
+									// TODO @MARCO 3 - Implementar decisao de parar medicao de temp ou continuar medicao e aplicar remedio 									
+									if (af.getQuantidade1() > INICIO_FEBRE)
+										System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com febre, devo aplicar remedio.NAO IMPLEMENTADO\n");
+									else System.out.println(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio.NAO IMPLEMENTADO\n");
 								}
+								// TODO @MARCO 4 - Implementar decisao de parar medicao de hemoglob ou continuar medicao e aplicar remedio
+								// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio
+								// TODO @MARCO 6 - Implementar decisao de parar medicao de pressao art ou continuar medicao e aplicar remedio
+								
 							}
 						} catch (Exception e){
 							System.out.println(e.getMessage());

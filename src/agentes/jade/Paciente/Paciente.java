@@ -26,6 +26,14 @@ public class Paciente {
 		PressaoArterial.setDiast(diast);
 	}
 	
+	public static Integer getPressaoDiast() {
+		return PressaoArterial.getDiast();
+	}
+	
+	public static Integer getPressaoSist() {
+		return PressaoArterial.getSist();
+	}
+	
 	public static Integer getHemoglobina() {
 		return hemoglobina;
 	}

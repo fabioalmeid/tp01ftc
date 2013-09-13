@@ -20,7 +20,7 @@ public class GrammarParserMonitor {
 			VisitanteMonitor vis = new VisitanteMonitor();
 			p.pTarefa().accept(vis.new TarefaVisitor<>(), null);
 			tarefaObject = new TarefaMonitor();
-			tarefaObject.setListaDeListaAfericoes(vis.getAfericoes());
+			tarefaObject.setAfericoes(vis.getAfericoes());
 		} catch (Error e) {
 			throw new Exception("String '" + message + "' nao pertence a linguagem. Erro: " + e.getMessage());
 		}	

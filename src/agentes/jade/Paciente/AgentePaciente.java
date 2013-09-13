@@ -15,6 +15,11 @@ import gramatica.Centralizador.Absyn.EData3;
 import gramatica.Centralizador.Absyn.EData4;
 import gramatica.Centralizador.Absyn.ERemedy1;
 import gramatica.Centralizador.Absyn.ERemedy2;
+import gramatica.Monitor.Absyn.EDados;
+import gramatica.Monitor.Absyn.EDados1;
+import gramatica.Monitor.Absyn.EDados2;
+import gramatica.Monitor.Absyn.EDados3;
+import gramatica.Monitor.Absyn.EQuantidade;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -97,37 +102,43 @@ public class AgentePaciente extends Agent {
 							List<Object> dados = tc.getDados();
 							ArrayList<Afericao> afericoes = new ArrayList<Afericao>();
 							for (Object o : dados) {
-								if (o instanceof EData1) {
+								if (o instanceof EData1) { // "Temperatura"
 									Afericao af = new Afericao();
-									af.setDado(new EData1());
+									EQuantidade q = new EQuantidade(Paciente.getTemperatura());
+									af.setDado(new EDados(q));
 									af.setQuantidade1(Paciente.getTemperatura());
 									af.setCurrentHora();
 									afericoes.add(af);
-								} else if (o instanceof EData2) {
+								} else if (o instanceof EData2) { // "Hemoglobina"
 									Afericao af = new Afericao();
-									af.setDado(new EData2());
+									EQuantidade q = new EQuantidade(Paciente.getHemoglobina());
+									af.setDado(new EDados2(q));
 									af.setQuantidade1(Paciente.getHemoglobina());
 									af.setCurrentHora();
 									afericoes.add(af);
 								}
-								else if (o instanceof EData3) {
+								else if (o instanceof EData3) { // "bilirrubina"
 									Afericao af = new Afericao();
-									af.setDado(new EData2());
+									EQuantidade q = new EQuantidade(Paciente.getBilirrubina());
+									af.setDado(new EDados1(q));
 									af.setQuantidade1(Paciente.getBilirrubina());
 									af.setCurrentHora();
 									afericoes.add(af);
 								}
-								else if (o instanceof EData4) {
+								else if (o instanceof EData4) { // "Pressao Arterial"
 									Afericao af = new Afericao();
-									af.setDado(new EData4());
-									af.setQuantidade1(PressaoArterial.getSist());
-									af.setQuantidade2(PressaoArterial.getDiast());
+									EQuantidade q1 = new EQuantidade(Paciente.getPressaoSist());
+									EQuantidade q2 = new EQuantidade(Paciente.getPressaoDiast());
+									af.setDado(new EDados3(q1,q2));
+									af.setQuantidade1(q1.integer_);
+									af.setQuantidade2(q2.integer_);
 									af.setCurrentHora();
 									afericoes.add(af);
 								}
 							}
 							TarefaMonitor tm = new TarefaMonitor();
-							resposta = tm.prettyPrinterAfericoes(afericoes);
+							tm.setAfericoes(afericoes);
+							resposta = tm.prettyPrinter();
 						}
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
