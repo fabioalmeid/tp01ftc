@@ -1,5 +1,11 @@
 package agentes.jade.Paciente;
 
+import gramatica.Atuador.Absyn.Acao;
+import gramatica.Atuador.Absyn.EAcao;
+import gramatica.Atuador.Absyn.EAcao1;
+import gramatica.Atuador.Absyn.ERemedio;
+import gramatica.Atuador.Absyn.ERemedio1;
+import gramatica.Atuador.Absyn.Remedio;
 import gramatica.Centralizador.Absyn.EApply1;
 import gramatica.Centralizador.Absyn.EApply2;
 import gramatica.Centralizador.Absyn.ECollect1;
@@ -24,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import agentes.UpdateAgentList;
+import agentes.jade.Atuador.TarefaAtuador;
 import agentes.jade.Centralizador.GrammarParserCentralizador;
 import agentes.jade.Centralizador.Medicamento;
 import agentes.jade.Centralizador.TarefaCentralizador;
@@ -82,10 +89,13 @@ public class AgentePaciente extends Agent {
 				String mensagem = ACLmsg.getContent().toString();
 				AID sender = ACLmsg.getSender();
 				String resposta = "";
+				
+				TarefaAtuador ta = new TarefaAtuador();
+				Remedio remedio = null;
+				Acao acao = null;				
 
 				// se o sender for monitor
 				if (monitor.contains(sender)) {
-
 					try {
 						TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
 						if (tc.getAcao() instanceof ECollect1) { // ECollect1. Coletar ::= "Iniciar Medicao";
@@ -123,42 +133,95 @@ public class AgentePaciente extends Agent {
 								TarefaMonitor tm = new TarefaMonitor();
 								resposta = tm.prettyPrinterAfericoes(afericoes);
 							}
-						} else if (tc.getAcao() instanceof EApply1) { // EApply1. Aplicar ::= "Liberar"; 
-							List<Medicamento> med = tc.getMedicacao();
-							for (Medicamento m : med) {
-								if (m.remedio instanceof ERemedy1) {
-									// dipirona sara temperatura e hemoglobina
-									Paciente.setRemedioTemp(true);
-									Paciente.setRemedioHemoglobina(true);
-									resposta = "Dipirona aplicada";
-								} else if (m.remedio instanceof ERemedy2) {
-									// paracetamol vai curar bilirrubina e pressao
-									Paciente.setRemedioBilirrubuna(true);
-									Paciente.setRemedioPressao(true);
-									resposta = "Paracetamol aplicado";
-								}
-							}
-
-						} else if (tc.getAcao() instanceof EApply2) { // EApply2. Aplicar ::= "Cessar Liberacao";
-							System.out.print("Cessando liberacao da medicacao");
-							List<Medicamento> med = tc.getMedicacao();
-							for (Medicamento m : med) {
-								if (m.remedio instanceof ERemedy1) {
-									// dipirona sara temperatura e hemoglobina
-									Paciente.setRemedioTemp(false);
-									Paciente.setRemedioHemoglobina(false);
-								} else if (m.remedio instanceof ERemedy2) {
-									// paracetamol vai curar bilirrubina e pressao
-									Paciente.setRemedioBilirrubuna(false);
-									Paciente.setRemedioPressao(false);
-								}
-							}
+//						} else if (tc.getAcao() instanceof EApply1) { // EApply1. Aplicar ::= "Liberar"; 
+//							List<Medicamento> med = tc.getMedicacao();
+//							for (Medicamento m : med) {
+//								if (m.remedio instanceof ERemedy1) {
+//									// dipirona sara temperatura e hemoglobina
+//									Paciente.setRemedioTemp(true);
+//									Paciente.setRemedioHemoglobina(true);
+//									resposta = "Dipirona aplicada";
+//								} else if (m.remedio instanceof ERemedy2) {
+//									// paracetamol vai curar bilirrubina e pressao
+//									Paciente.setRemedioBilirrubuna(true);
+//									Paciente.setRemedioPressao(true);
+//									resposta = "Paracetamol aplicado";
+//								}
+//							}
+//
+//						} else if (tc.getAcao() instanceof EApply2) { // EApply2. Aplicar ::= "Cessar Liberacao";
+//							System.out.print("Cessando liberacao da medicacao");
+//							List<Medicamento> med = tc.getMedicacao();
+//							for (Medicamento m : med) {
+//								if (m.remedio instanceof ERemedy1) {
+//									// dipirona sara temperatura e hemoglobina
+//									Paciente.setRemedioTemp(false);
+//									Paciente.setRemedioHemoglobina(false);
+//								} else if (m.remedio instanceof ERemedy2) {
+//									// paracetamol vai curar bilirrubina e pressao
+//									Paciente.setRemedioBilirrubuna(false);
+//									Paciente.setRemedioPressao(false);
+//								}
+//							}
 						}
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
 					}
 				} else if (atuador.contains(sender)) {
-					System.out.println("AINDA NAO IMPLEMENTADO");
+					try {
+						TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
+						if (tc.getAcao() instanceof EApply1) { // Aplicar
+							List<Medicamento> med = tc.getMedicacao();
+							
+							for (Medicamento m : med) {
+								if (m.remedio instanceof ERemedy1) {
+									Paciente.setRemedioTemp(true); // Dipirona cures Temperatura and Hemoglobina
+									Paciente.setRemedioHemoglobina(true);
+									System.out.println(getLocalName() + ": Recebi medicacao Dipirona");
+									remedio = new ERemedio();
+									acao = new EAcao(remedio);
+									ta.setAcao(acao);
+									ta.setRemedio(remedio);
+								} else if (m.remedio instanceof ERemedy2) {
+									// Paracetamol cures Bilirrubina and Pressao Arterial
+									Paciente.setRemedioBilirrubuna(true);
+									Paciente.setRemedioPressao(true);
+									System.out.println(getLocalName() + ": Recebi medicacao Paracetamol");
+									remedio = new ERemedio1();
+									acao = new EAcao1(remedio);
+									ta.setAcao(acao);
+									ta.setRemedio(remedio);
+								}
+							}
+							resposta = ta.prettyPrinterAction();
+						} else if (tc.getAcao() instanceof EApply2) {
+							// Parando medicao
+							List<Medicamento> med = tc.getMedicacao();
+							for (Medicamento m : med) {
+								if (m.remedio instanceof ERemedy1) { // Dipirona
+									Paciente.setRemedioTemp(false);
+									Paciente.setRemedioHemoglobina(false);
+									System.out.println(getLocalName() + ": Recebi cessar Dipirona");
+									remedio = new ERemedio();
+									acao = new EAcao(remedio);
+									ta.setAcao(acao);
+									ta.setRemedio(remedio);
+								} else if (m.remedio instanceof ERemedy2) { // Paracetamol
+									// Paracetamol cures Bilirrubina and Pressao Arterial
+									Paciente.setRemedioBilirrubuna(false);
+									Paciente.setRemedioPressao(false);
+									System.out.println(getLocalName() + ": Recebi cessar Pacacetamol");
+									remedio = new ERemedio1();
+									acao = new EAcao1(remedio);
+									ta.setAcao(acao);
+									ta.setRemedio(remedio);
+								}
+							}
+							resposta = ta.prettyPrinterAction();
+						} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
 				}
 
 				ACLMessage replica = ACLmsg.createReply();

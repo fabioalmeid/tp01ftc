@@ -92,7 +92,7 @@ public class AgenteAtuador extends Agent {
 										} else
 											System.out.println(getLocalName() + " nao esta monitorando Dipirona.");
 									} else if (m.remedio instanceof ERemedy2) {
-										System.out.println(" Hemoglobina");
+										System.out.println(" Paracetamol");
 										if (isParacetamolRunning) {
 											removeBehaviour(checkParacetamol);
 										} else

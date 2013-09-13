@@ -5,10 +5,6 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
-import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.wrapper.AgentContainer;
@@ -17,7 +13,6 @@ import jade.wrapper.StaleProxyException;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.GeradorAleatorioMsg;
 import agentes.UpdateAgentList;
 import agentes.jade.Monitor.Afericao;
 import agentes.jade.Monitor.GrammarParserMonitor;
