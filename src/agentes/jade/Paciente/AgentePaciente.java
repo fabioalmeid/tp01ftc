@@ -45,8 +45,9 @@ import agentes.jade.Monitor.TarefaMonitor;
 
 public class AgentePaciente extends Agent {
 	private static final long INTERVALO_AGENTES = 5000; // 5s
-	private static final long INTERVALO_ATUALIZACAO = 10000; // 10s
-	private static final int MAX_TICKS_UNCHANGED = 5;
+	private static final long INTERVALO_ATUALIZACAO = 6000; // 10s
+//	private static final int MAX_TICKS_UNCHANGED = 5;
+	private static final int MAX_TICKS_UNCHANGED = 2;
 	private List<AID> monitor;
 	private List<AID> atuador;
 	
