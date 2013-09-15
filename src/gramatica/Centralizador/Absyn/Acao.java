@@ -5,6 +5,7 @@ public abstract class Acao implements java.io.Serializable {
   public interface Visitor <R,A> {
     public R visit(gramatica.Centralizador.Absyn.EAction1 p, A arg);
     public R visit(gramatica.Centralizador.Absyn.EAction2 p, A arg);
+    public R visit(gramatica.Centralizador.Absyn.EAction3 p, A arg);
 
   }
 

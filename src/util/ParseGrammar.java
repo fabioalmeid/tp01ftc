@@ -1,5 +1,6 @@
 package util;
 
+
 import gramatica.Centralizador.PrettyPrinter;
 import gramatica.Centralizador.Yylex;
 import gramatica.Centralizador.parser;
@@ -7,6 +8,8 @@ import gramatica.Centralizador.Absyn.Tarefa;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
+
 
 public class ParseGrammar {
 

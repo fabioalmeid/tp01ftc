@@ -8,20 +8,20 @@ public class ExemploParserGramaticaCentralizador {
 		List<String> mensagens = new ArrayList<String>();
 		
 		// todas mensagens corretas - Simulacao de envio do centralizador
-		mensagens.add("Iniciar Medicao Temperatura");
-		mensagens.add("Iniciar Medicao Hemoglobina");
-		mensagens.add("Iniciar Medicao bilirrubina");
-		mensagens.add("Iniciar Medicao Temperatura e Hemoglobina");
-		mensagens.add("Iniciar Medicao Hemoglobina e bilirrubina e Temperatura");
-		mensagens.add("Parar medicao Temperatura");
-		mensagens.add("Parar medicao bilirrubina");
-		mensagens.add("Parar medicao Temperatura e bilirrubina");
+		mensagens.add("Iniciar Medicao de Temperatura");
+		mensagens.add("Iniciar Medicao de Hemoglobina");
+		mensagens.add("Iniciar Medicao de Bilirrubina");
+		mensagens.add("Iniciar Medicao de Temperatura e Hemoglobina");
+		mensagens.add("Iniciar Medicao de Hemoglobina e Bilirrubina e Temperatura");
+		mensagens.add("Parar Medicao de Temperatura");
+		mensagens.add("Parar Medicao de Bilirrubina");
+		mensagens.add("Parar Medicao de Temperatura e Bilirrubina");
 		mensagens.add("Liberar Dipirona");
 		mensagens.add("Liberar Paracetamol");
-		mensagens.add("Liberar 8 Dipirona");
-		mensagens.add("Liberar 6 Paracetamol");
-		mensagens.add("Cessar Liberacao Dipirona");
-		mensagens.add("Cessar Liberacao Paracetamol");		
+		mensagens.add("Liberar 8 ml de Dipirona");
+		mensagens.add("Liberar 6 ml de Paracetamol");
+		mensagens.add("Cessar Liberacao de Dipirona");
+		mensagens.add("Cessar Liberacao de Paracetamol");		
 
 		for (String s : mensagens) {
 			System.out.println("mensagem recebida do centralizador:\n" + s);

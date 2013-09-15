@@ -1,5 +1,6 @@
 package agentes.jade.Monitor;
 
+import gramatica.Centralizador.Absyn.EAction3;
 import gramatica.Centralizador.Absyn.ECollect1;
 import gramatica.Centralizador.Absyn.ECollect2;
 import gramatica.Centralizador.Absyn.EData1;
@@ -18,12 +19,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
-import agentes.jade.Atuador.GrammarParserAtuador;
-import agentes.jade.Atuador.TarefaAtuador;
 import agentes.jade.Centralizador.GrammarParserCentralizador;
 import agentes.jade.Centralizador.TarefaCentralizador;
 
@@ -139,6 +136,9 @@ public class AgenteMonitor extends Agent {
 									}
 								}
 
+							} else if (tc.getAcao() instanceof EAction3) {
+								System.out.println(getLocalName() + " : Mensagem de autodestruicao recebida.");
+								this.myAgent.doDelete();
 							} else System.out.println(getLocalName() + ": Comando invalido para monitor : " + mensagem);
 						} catch (Exception e) {
 							System.out.println(e.getMessage());

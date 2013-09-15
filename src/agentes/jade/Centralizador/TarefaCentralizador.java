@@ -1,6 +1,8 @@
 package agentes.jade.Centralizador;
 
-import gramatica.Centralizador.Absyn.Dados;
+
+
+import gramatica.Centralizador.Absyn.EAction3;
 import gramatica.Centralizador.Absyn.EApply1;
 import gramatica.Centralizador.Absyn.EApply2;
 import gramatica.Centralizador.Absyn.ECollect1;
@@ -13,19 +15,19 @@ import gramatica.Centralizador.Absyn.ERemedy1;
 import gramatica.Centralizador.Absyn.ERemedy2;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+
 
 public class TarefaCentralizador {
-	private final int DATA_QUANTITY = 5;
-	
+
 	private Object acao;	
 	/*possíveis valores
 	 * ECollect1. Coletar ::= "Iniciar Medicao";
 	 * ECollect2. Coletar ::= "Parar medicao";
 	 * EApply1. Aplicar ::= "Liberar";
-	 * EApply2. Aplicar ::= "Cessar Liberacao"; 
+	 * EApply2. Aplicar ::= "Cessar Liberacao";
+	 * EAction3. Acao ::= "Autodestruicao";
 	 * */
 	
 	private List<Object> dados = new ArrayList<Object>();
@@ -67,14 +69,35 @@ public class TarefaCentralizador {
 		StringBuilder pretty = new StringBuilder();
 		
 		if ((getAcao() instanceof ECollect1) || (getAcao() instanceof ECollect2)) {
-			String action = (getAcao() instanceof ECollect1) ? "Iniciar Medicao " : "Parar medicao ";
+			String action = (getAcao() instanceof ECollect1) ? "Iniciar Medicao de " : "Parar Medicao de ";
 			pretty.append(action);
 			pretty.append(prettyPrinterDados(getDados()));
 		} else if ((getAcao() instanceof EApply1) || (getAcao() instanceof EApply2)) {
-			String action = (getAcao() instanceof EApply1) ? "Liberar " : "Cessar Liberacao "; 
+			String action = (getAcao() instanceof EApply1) ? "Liberar " : "Cessar Liberacao de "; 
 			pretty.append(action);
 			pretty.append(prettyPrinterMedicacao(getMedicacao()));
-		}
+		} else if (getAcao() instanceof EAction3)
+			pretty.append("Autodestruicao");
+		
+		return pretty.toString();
+	}
+	
+	public String prettyPrinterTarefaWithError() {
+		StringBuilder pretty = new StringBuilder();
+		
+		if (getAcao() instanceof ECollect1)
+			pretty.append("Iniciar Medicao ");
+		else if (getAcao() instanceof ECollect2)
+			pretty.append("Parar medicao ");
+		else if (getAcao() instanceof EApply1)
+			pretty.append("Liberar ");
+		else if (getAcao() instanceof EApply2)
+			pretty.append("Cessar Liberacao ");
+		else if (getAcao() instanceof EAction3)
+			pretty.append("Autodestruicao");
+			
+		pretty.append(prettyPrinterDados(getDados()));
+		pretty.append(prettyPrinterMedicacao(getMedicacao()));
 		
 		return pretty.toString();
 	}
@@ -88,7 +111,7 @@ public class TarefaCentralizador {
 			else if (o instanceof EData2)
 				pretty.append((cont > 0) ? " e Hemoglobina" : "Hemoglobina");
 			else if (o instanceof EData3)
-				pretty.append((cont > 0) ? " e bilirrubina" : "bilirrubina");
+				pretty.append((cont > 0) ? " e Bilirrubina" : "Bilirrubina");
 			else if (o instanceof EData4)
 				pretty.append((cont > 0) ? " e Pressao Arterial" : "Pressao Arterial");
 			cont++;
@@ -101,59 +124,17 @@ public class TarefaCentralizador {
 		for (Medicamento m : med) {
 			if (m.remedio instanceof ERemedy1) {
 				if (m.quantidade != null)
-					pretty.append(String.valueOf(m.quantidade) + " Dipirona");
+					pretty.append(String.valueOf(m.quantidade) + " ml de Dipirona");
 				else
 					pretty.append("Dipirona");
 			} else if (m.remedio instanceof ERemedy2) {
 				if (m.quantidade != null)
-					pretty.append(String.valueOf(m.quantidade)+ " Paracetamol");
+					pretty.append(String.valueOf(m.quantidade)+ " ml de Paracetamol");
 				else
 					pretty.append("Paracetamol");
 			}
 		}
 		return pretty.toString();
-	}
-	
-	public String getRandomStartMeasure() {
-		TarefaCentralizador tc = new TarefaCentralizador();
-		
-		// seta iniciar medicao
-		tc.setAcao(new ECollect1());
-
-		int iRandom = (int) (Math.random() * (DATA_QUANTITY));
-		switch (iRandom) {
-		case 0:
-			tc.setDados(new EData1());
-			break;
-		case 1:
-			tc.setDados(new EData2());
-			break;
-		case 2:
-			tc.setDados(new EData3());
-			break;
-		case 3:
-			tc.setDados(new EData4());
-			break;
-		case 4:
-			int iRandom2 = (int) (Math.random() * (DATA_QUANTITY-1));
-			int iRandom3 = (int) (Math.random() * (DATA_QUANTITY-1));
-			
-			Map <Integer, Dados> hm = new HashMap<Integer, Dados>();
-			hm.put(0, new EData1());
-			hm.put(1, new EData2());
-			hm.put(2, new EData3());
-			hm.put(3, new EData4());
-			
-			tc.setDados(hm.get(iRandom2));
-			if (iRandom3 != iRandom2)
-				tc.setDados(hm.get(iRandom3));
-							
-			break;
-		default:
-			System.out.println("Error: Index out of range on TarefaCentralizador");
-			break;
-		}		
-		return tc.prettyPrinterTarefa();
 	}
 
 }

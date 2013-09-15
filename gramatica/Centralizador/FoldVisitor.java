@@ -30,6 +30,10 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
       r = combine(p.medicacao_.accept(this, arg), r, arg);
       return r;
     }
+    public R visit(Centralizador.Absyn.EAction3 p, A arg) {
+      R r = leaf(arg);
+      return r;
+    }
 
 /* Coletar */
     public R visit(Centralizador.Absyn.ECollect1 p, A arg) {

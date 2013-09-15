@@ -1,10 +1,12 @@
 package gramatica.Centralizador;
 
+
 import gramatica.Centralizador.Absyn.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+
 
 /** BNFC-Generated Fold Visitor */
 public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
@@ -29,6 +31,10 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
       R r = leaf(arg);
       r = combine(p.aplicar_.accept(this, arg), r, arg);
       r = combine(p.medicacao_.accept(this, arg), r, arg);
+      return r;
+    }
+    public R visit(gramatica.Centralizador.Absyn.EAction3 p, A arg) {
+      R r = leaf(arg);
       return r;
     }
 

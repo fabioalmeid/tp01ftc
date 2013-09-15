@@ -37,6 +37,11 @@ public class ComposVisitor<A> implements
 
       return new gramatica.Centralizador.Absyn.EAction2(aplicar_, medicacao_);
     }
+    public Acao visit(gramatica.Centralizador.Absyn.EAction3 p, A arg)
+    {
+
+      return new gramatica.Centralizador.Absyn.EAction3();
+    }
 
 /* Coletar */
     public Coletar visit(gramatica.Centralizador.Absyn.ECollect1 p, A arg)

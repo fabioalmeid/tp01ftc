@@ -43,6 +43,14 @@ public class VisitanteCentralizador {
 			
 			return null;
 		}
+		
+		public R visit(gramatica.Centralizador.Absyn.EAction3 p, A arg)
+	    {
+	      /* Code For EAction3 Goes Here */
+			tarefa.setAcao(p);
+
+	      return null;
+	    }
 
 	}
 

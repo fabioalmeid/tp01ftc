@@ -37,6 +37,11 @@ public class ComposVisitor<A> implements
 
       return new Centralizador.Absyn.EAction2(aplicar_, medicacao_);
     }
+    public Acao visit(Centralizador.Absyn.EAction3 p, A arg)
+    {
+
+      return new Centralizador.Absyn.EAction3();
+    }
 
 /* Coletar */
     public Coletar visit(Centralizador.Absyn.ECollect1 p, A arg)

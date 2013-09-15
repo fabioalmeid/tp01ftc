@@ -10,6 +10,7 @@ public class AbstractVisitor<R,A> implements AllVisitor<R,A> {
 /* Acao */
     public R visit(gramatica.Centralizador.Absyn.EAction1 p, A arg) { return visitDefault(p, arg); }
     public R visit(gramatica.Centralizador.Absyn.EAction2 p, A arg) { return visitDefault(p, arg); }
+    public R visit(gramatica.Centralizador.Absyn.EAction3 p, A arg) { return visitDefault(p, arg); }
     public R visitDefault(gramatica.Centralizador.Absyn.Acao p, A arg) {
       throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
     }

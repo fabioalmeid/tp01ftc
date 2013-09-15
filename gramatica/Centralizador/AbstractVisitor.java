@@ -10,6 +10,7 @@ public class AbstractVisitor<R,A> implements AllVisitor<R,A> {
 /* Acao */
     public R visit(Centralizador.Absyn.EAction1 p, A arg) { return visitDefault(p, arg); }
     public R visit(Centralizador.Absyn.EAction2 p, A arg) { return visitDefault(p, arg); }
+    public R visit(Centralizador.Absyn.EAction3 p, A arg) { return visitDefault(p, arg); }
     public R visitDefault(Centralizador.Absyn.Acao p, A arg) {
       throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
     }

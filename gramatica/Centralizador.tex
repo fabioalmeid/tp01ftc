@@ -35,16 +35,16 @@ The set of reserved words is the set of terminals appearing in the grammar. Thos
 The reserved words used in Centralizador are the following: \\
 
 \begin{tabular}{lll}
-{\reserved{Dipirona}} &{\reserved{Hemoglobina}} &{\reserved{Liberar}} \\
-{\reserved{Paracetamol}} &{\reserved{Temperatura}} &{\reserved{bilirrubina}} \\
-{\reserved{e}} & & \\
+{\reserved{Autodestruicao}} &{\reserved{Bilirrubina}} &{\reserved{Dipirona}} \\
+{\reserved{Hemoglobina}} &{\reserved{Liberar}} &{\reserved{Paracetamol}} \\
+{\reserved{Temperatura}} &{\reserved{e}} & \\
 \end{tabular}\\
 
 The symbols used in Centralizador are the following: \\
 
 \begin{tabular}{lll}
-{\symb{Iniciar Medicao}} &{\symb{Parar medicao}} &{\symb{Cessar Liberacao}} \\
-{\symb{Pressao Arterial}} & & \\
+{\symb{Iniciar Medicao de }} &{\symb{Parar Medicao de }} &{\symb{Cessar Liberacao de }} \\
+{\symb{Pressao Arterial}} &{\symb{ ml de }} & \\
 \end{tabular}\\
 
 \subsection*{Comments}
@@ -63,22 +63,23 @@ All other symbols are terminals.\\
 \begin{tabular}{lll}
 {\nonterminal{Acao}} & {\arrow}  &{\nonterminal{Coletar}} {\nonterminal{Dados}}  \\
  & {\delimit}  &{\nonterminal{Aplicar}} {\nonterminal{Medicacao}}  \\
+ & {\delimit}  &{\terminal{Autodestruicao}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Coletar}} & {\arrow}  &{\terminal{Iniciar Medicao}}  \\
- & {\delimit}  &{\terminal{Parar medicao}}  \\
+{\nonterminal{Coletar}} & {\arrow}  &{\terminal{Iniciar Medicao de }}  \\
+ & {\delimit}  &{\terminal{Parar Medicao de }}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{Aplicar}} & {\arrow}  &{\terminal{Liberar}}  \\
- & {\delimit}  &{\terminal{Cessar Liberacao}}  \\
+ & {\delimit}  &{\terminal{Cessar Liberacao de }}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{Dados}} & {\arrow}  &{\terminal{Temperatura}}  \\
  & {\delimit}  &{\terminal{Hemoglobina}}  \\
- & {\delimit}  &{\terminal{bilirrubina}}  \\
+ & {\delimit}  &{\terminal{Bilirrubina}}  \\
  & {\delimit}  &{\terminal{Pressao Arterial}}  \\
  & {\delimit}  &{\nonterminal{Dados}} {\nonterminal{Operador}} {\nonterminal{Dados}}  \\
 \end{tabular}\\
@@ -88,7 +89,7 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Medicacao}} & {\arrow}  &{\nonterminal{Quantidade}} {\nonterminal{Remedio}}  \\
+{\nonterminal{Medicacao}} & {\arrow}  &{\nonterminal{Quantidade}} {\terminal{ ml de }} {\nonterminal{Remedio}}  \\
  & {\delimit}  &{\nonterminal{Remedio}}  \\
 \end{tabular}\\
 

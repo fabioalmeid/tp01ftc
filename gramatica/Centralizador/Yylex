@@ -24,17 +24,19 @@ IDENT = ({LETTER}|{DIGIT}|['_])
 %state STRING
 %state ESCAPED
 %%
-<YYINITIAL>Iniciar\ Medicao { return new Symbol(sym._SYMB_0); }
-<YYINITIAL>Parar\ medicao { return new Symbol(sym._SYMB_1); }
-<YYINITIAL>Cessar\ Liberacao { return new Symbol(sym._SYMB_2); }
+<YYINITIAL>Iniciar\ Medicao\ de  { return new Symbol(sym._SYMB_0); }
+<YYINITIAL>Parar\ Medicao\ de  { return new Symbol(sym._SYMB_1); }
+<YYINITIAL>Cessar\ Liberacao\ de  { return new Symbol(sym._SYMB_2); }
 <YYINITIAL>Pressao\ Arterial { return new Symbol(sym._SYMB_3); }
-<YYINITIAL>Dipirona { return new Symbol(sym._SYMB_4); }
-<YYINITIAL>Hemoglobina { return new Symbol(sym._SYMB_5); }
-<YYINITIAL>Liberar { return new Symbol(sym._SYMB_6); }
-<YYINITIAL>Paracetamol { return new Symbol(sym._SYMB_7); }
-<YYINITIAL>Temperatura { return new Symbol(sym._SYMB_8); }
-<YYINITIAL>bilirrubina { return new Symbol(sym._SYMB_9); }
-<YYINITIAL>e { return new Symbol(sym._SYMB_10); }
+<YYINITIAL>\ ml\ de  { return new Symbol(sym._SYMB_4); }
+<YYINITIAL>Autodestruicao { return new Symbol(sym._SYMB_5); }
+<YYINITIAL>Bilirrubina { return new Symbol(sym._SYMB_6); }
+<YYINITIAL>Dipirona { return new Symbol(sym._SYMB_7); }
+<YYINITIAL>Hemoglobina { return new Symbol(sym._SYMB_8); }
+<YYINITIAL>Liberar { return new Symbol(sym._SYMB_9); }
+<YYINITIAL>Paracetamol { return new Symbol(sym._SYMB_10); }
+<YYINITIAL>Temperatura { return new Symbol(sym._SYMB_11); }
+<YYINITIAL>e { return new Symbol(sym._SYMB_12); }
 
 
 

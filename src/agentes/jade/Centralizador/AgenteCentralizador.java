@@ -20,6 +20,7 @@ import jade.wrapper.StaleProxyException;
 
 import java.util.List;
 
+import util.GeradorAleatorioMsg;
 import util.UpdateAgentList;
 import agentes.jade.Monitor.Afericao;
 import agentes.jade.Monitor.GrammarParserMonitor;
@@ -88,8 +89,7 @@ public class AgenteCentralizador extends Agent {
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER));
 				// TODO @MARCO 1 - Remover o envio aleatório de mensagem. O centralizador deve de tempo em tempo mandar medir algo (temp ou pressao ou bilirrubina ou etc....)
 				// TODO @MARCO 2 - Baseado na leitura dos dados decidir se para medicao ou se continua medicao e aplica remedio
-				TarefaCentralizador tc = new TarefaCentralizador();
-				sendMessageToAgent(tc.getRandomStartMeasure(), "monitor" + indexMsg);
+				sendMessageToAgent(GeradorAleatorioMsg.getRandomStartMeasure(), "monitor" + indexMsg);
 //				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
 //				sendMessageToAgent("Iniciar Medicao Temperatura", "monitor" + indexMsg);
 //				sendMessageToAgent("Iniciar Medicao Hemoglobina", "monitor" + indexMsg);

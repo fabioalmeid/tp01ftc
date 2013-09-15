@@ -1,6 +1,9 @@
 package gramatica.Centralizador;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import gramatica.Centralizador.*;
+import gramatica.Centralizador.Absyn.*;
+import gramatica.java_cup.runtime.*;
+import java.io.*;
+
 
 public class Test
 {
@@ -22,7 +25,6 @@ public class Test
     /* The default parser is the first-defined entry point. */
     /* You may want to change this. Other options are: */
     /* pAcao, pColetar, pAplicar, pDados, pOperador, pMedicacao, pQuantidade, pRemedio */
-    
     try
     {
       gramatica.Centralizador.Absyn.Tarefa parse_tree = p.pTarefa();

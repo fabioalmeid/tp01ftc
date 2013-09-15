@@ -41,6 +41,13 @@ public class VisitSkel
 
       return null;
     }
+    public R visit(gramatica.Centralizador.Absyn.EAction3 p, A arg)
+    {
+      /* Code For EAction3 Goes Here */
+
+
+      return null;
+    }
 
   }
   public class ColetarVisitor<R,A> implements Coletar.Visitor<R,A>

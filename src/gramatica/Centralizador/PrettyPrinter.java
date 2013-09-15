@@ -1,4 +1,5 @@
 package gramatica.Centralizador;
+import gramatica.Centralizador.Absyn.*;
 
 public class PrettyPrinter
 {
@@ -225,6 +226,13 @@ public class PrettyPrinter
        pp(_eaction2.medicacao_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
+    else     if (foo instanceof gramatica.Centralizador.Absyn.EAction3)
+    {
+       gramatica.Centralizador.Absyn.EAction3 _eaction3 = (gramatica.Centralizador.Absyn.EAction3) foo;
+       if (_i_ > 0) render(_L_PAREN);
+       render("Autodestruicao");
+       if (_i_ > 0) render(_R_PAREN);
+    }
   }
 
   private static void pp(gramatica.Centralizador.Absyn.Coletar foo, int _i_)
@@ -233,14 +241,14 @@ public class PrettyPrinter
     {
        gramatica.Centralizador.Absyn.ECollect1 _ecollect1 = (gramatica.Centralizador.Absyn.ECollect1) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("Iniciar Medicao");
+       render("Iniciar Medicao de ");
        if (_i_ > 0) render(_R_PAREN);
     }
     else     if (foo instanceof gramatica.Centralizador.Absyn.ECollect2)
     {
        gramatica.Centralizador.Absyn.ECollect2 _ecollect2 = (gramatica.Centralizador.Absyn.ECollect2) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("Parar medicao");
+       render("Parar Medicao de ");
        if (_i_ > 0) render(_R_PAREN);
     }
   }
@@ -258,7 +266,7 @@ public class PrettyPrinter
     {
        gramatica.Centralizador.Absyn.EApply2 _eapply2 = (gramatica.Centralizador.Absyn.EApply2) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("Cessar Liberacao");
+       render("Cessar Liberacao de ");
        if (_i_ > 0) render(_R_PAREN);
     }
   }
@@ -283,7 +291,7 @@ public class PrettyPrinter
     {
        gramatica.Centralizador.Absyn.EData3 _edata3 = (gramatica.Centralizador.Absyn.EData3) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("bilirrubina");
+       render("Bilirrubina");
        if (_i_ > 0) render(_R_PAREN);
     }
     else     if (foo instanceof gramatica.Centralizador.Absyn.EData4)
@@ -322,6 +330,7 @@ public class PrettyPrinter
        gramatica.Centralizador.Absyn.EMedic1 _emedic1 = (gramatica.Centralizador.Absyn.EMedic1) foo;
        if (_i_ > 0) render(_L_PAREN);
        pp(_emedic1.quantidade_, 0);
+       render(" ml de ");
        pp(_emedic1.remedio_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -395,6 +404,11 @@ public class PrettyPrinter
        sh(_eaction2.aplicar_);
        sh(_eaction2.medicacao_);
        render(")");
+    }
+    if (foo instanceof gramatica.Centralizador.Absyn.EAction3)
+    {
+       gramatica.Centralizador.Absyn.EAction3 _eaction3 = (gramatica.Centralizador.Absyn.EAction3) foo;
+       render("EAction3");
     }
   }
 

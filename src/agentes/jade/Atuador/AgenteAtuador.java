@@ -1,5 +1,6 @@
 package agentes.jade.Atuador;
 
+import gramatica.Centralizador.Absyn.EAction3;
 import gramatica.Centralizador.Absyn.EApply1;
 import gramatica.Centralizador.Absyn.EApply2;
 import gramatica.Centralizador.Absyn.ERemedy1;
@@ -100,6 +101,9 @@ public class AgenteAtuador extends Agent {
 									}
 								}
 
+							} if (tc.getAcao() instanceof EAction3) {
+								System.out.println(getLocalName() + " : Mensagem de autodestruicao recebida.");
+								this.myAgent.doDelete();
 							} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
