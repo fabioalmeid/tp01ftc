@@ -4,7 +4,11 @@ import gramatica.Centralizador.Absyn.EApply1;
 import gramatica.Centralizador.Absyn.EApply2;
 import gramatica.Centralizador.Absyn.ECollect2;
 import gramatica.Centralizador.Absyn.EData1;
+import gramatica.Centralizador.Absyn.EData2;
+import gramatica.Centralizador.Absyn.EData3;
+import gramatica.Centralizador.Absyn.EData4;
 import gramatica.Centralizador.Absyn.ERemedy1;
+import gramatica.Centralizador.Absyn.ERemedy2;
 import gramatica.Monitor.Absyn.EDados;
 import gramatica.Monitor.Absyn.EDados1;
 import gramatica.Monitor.Absyn.EDados2;
@@ -38,6 +42,8 @@ public class AgenteCentralizador extends Agent {
 	private final static int MAX_HEMO = 23;
 	private final static int MIN_BILI = 0;
 	private final static int MAX_BILI = 14;
+	
+	int cont ;
 	
 
 	
@@ -91,7 +97,10 @@ public class AgenteCentralizador extends Agent {
 				// TODO @MARCO 2 - Baseado na leitura dos dados decidir se para medicao ou se continua medicao e aplica remedio
 				sendMessageToAgent(GeradorAleatorioMsg.getRandomStartMeasure(), "monitor" + indexMsg);
 //				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
-//				sendMessageToAgent("Iniciar Medicao Temperatura", "monitor" + indexMsg);
+//				if(cont == 0){
+//					sendMessageToAgent("Iniciar Medicao de Pressao Arterial", "monitor" + indexMsg);
+//				}
+//					cont++;
 //				sendMessageToAgent("Iniciar Medicao Hemoglobina", "monitor" + indexMsg);
 //				sendMessageToAgent("Iniciar Medicao bilirrubina", "monitor" + indexMsg);
 //				sendMessageToAgent("Iniciar Medicao Temperatura e Hemoglobina", "monitor" + indexMsg);
@@ -128,78 +137,161 @@ public class AgenteCentralizador extends Agent {
 				if (msg != null) {
 					// quem enviou a mensagem?
 					AID sender = msg.getSender();
-					
+
 					// se o sender for monitor
 					if (monitor.contains(sender)) {
 						System.out.println(getLocalName() + ": " + msg.getSender().getLocalName() + " respondeu " + msg.getContent());
-						//System.out.println(getLocalName() + ": Msg recebida do monitor " + msg.getSender().getLocalName() + " -->" + msg.getContent());
+						// System.out.println(getLocalName() + ": Msg recebida do monitor " + msg.getSender().getLocalName() + " -->" + msg.getContent());
 						// valida mensagem
 						TarefaMonitor tm = new TarefaMonitor();
 						try {
 							tm = GrammarParserMonitor.getMonitorMessageObject(msg.getContent());
 							List<Afericao> afericoes = tm.getAfericoes();
 							// exemplo de tratamento para temperatura
+
+							String indexCurrentAgent = sender.getLocalName().substring(sender.getLocalName().indexOf('r') + 1, sender.getLocalName().length());
 							for (Afericao af : afericoes) {
-								if (af.getDado() instanceof EDados) { // veja gramatica para EDados
-									// TODO @MARCO 3 - Implementar decisao de parar medicao de temp ou continuar medicao e aplicar remedio 		
-									String indexCurrentAgent = sender.getLocalName().substring(sender.getLocalName().length() - 1);
+								if (af.getDado() instanceof EDados) { 
+									//  Decisao de parar medicao de temp ou continuar medicao e aplicar remedio
+
 									if (af.getQuantidade1() > INICIO_FEBRE) {
 										TarefaCentralizador tarefa = new TarefaCentralizador();
 										tarefa.setAcao(new EApply1());
 										Medicamento medicamento = new Medicamento();
 										medicamento.setQuantidade(15);
-										medicamento.setRemedio(new ERemedy1());
-										tarefa.setMedicacao(medicamento);		
-										atuadorIsBusy[Integer.valueOf(indexCurrentAgent)] = true;
-										sendMessageToAgent(tarefa.prettyPrinterTarefa(),"atuador" + indexCurrentAgent);
-										System.out.println(getLocalName()	+ ": " + sender.getLocalName()+ " esta com febre, devo aplicar remedio.NAO IMPLEMENTADO");
+										medicamento.setRemedio(new ERemedy1()); // dipirona
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+										// System.out.println(getLocalName() +": " + sender.getLocalName()+" esta com febre, devo aplicar remedio.NAO IMPLEMENTADO");
 									} else {
-										if(atuadorIsBusy[Integer.valueOf(indexCurrentAgent)] == true){
-											TarefaCentralizador tarefa = new TarefaCentralizador();
-											tarefa.setAcao(new EApply2());  // Cessar Liberacao
-											Medicamento medicamento = new Medicamento();
-											medicamento.setRemedio(new ERemedy1()); //dipirona
-											tarefa.setMedicacao(medicamento);
-											sendMessageToAgent(tarefa.prettyPrinterTarefa(),"atuador" + indexCurrentAgent);	
-										}
 										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new ECollect2()); // "Parar medicao"
-										tarefa.setDados(new EData1());   //"Temperatura"
-																		
-									}
-										System.out.println(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio.NAO IMPLEMENTADO");
-								} if (af.getDado() instanceof EDados2) { // veja gramatica para EDados
-									// TODO @MARCO 4 - Implementar decisao de parar medicao de hemoglob ou continuar medicao e aplicar remedio 									
-									if ((af.getQuantidade1() >= 13) && (af.getQuantidade1() <= 20))
-										System.out.println(getLocalName() + ": " + sender.getLocalName() + " hemoglobina boa, nao precisa remedio.NAO IMPLEMENTADO");
-//	TODO								else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com hemoglobina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
-								} if (af.getDado() instanceof EDados1) { // veja gramatica para EDados
-									// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio 									
-									if ((af.getQuantidade1() > 4) && (af.getQuantidade1() < 11))
-										System.out.println(getLocalName() + ": " + sender.getLocalName() + " bilirrubina boa, nao precisa remedio.NAO IMPLEMENTADO\n");
-//	TODO								else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
-								} if (af.getDado() instanceof EDados3) { // veja gramatica para EDados
-									// TODO @MARCO 5 - Implementar decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio 									
-									if ((af.getQuantidade1() <= 140) || (af.getQuantidade2() <= 160))
-										System.out.println(getLocalName() + ": " + sender.getLocalName() + " pressao arterial boa, nao precisa remedio.NAO IMPLEMENTADO");
-//	TODO								else System.out.println(getLocalName() + ": " + sender.getLocalName() + " esta com pressao arterial ruim, devo aplicar remedio.NAO IMPLEMENTADO");
-								}
-								
+										tarefa.setAcao(new EApply2()); // Cessar Liberacao
+										Medicamento medicamento = new Medicamento();
+										medicamento.setRemedio(new ERemedy1()); // dipirona
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
 
-								// TODO @MARCO 6 - Implementar decisao de parar medicao de pressao art ou continuar medicao e aplicar remedio
-								
+										TarefaCentralizador tarefa2 = new TarefaCentralizador();
+										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
+										tarefa2.setDados(new EData1()); // "Temperatura"
+										sendMessageToAgent( tarefa2.prettyPrinterTarefa(), "monitor" + indexCurrentAgent);
+										// System.out.println(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio.NAO IMPLEMENTADO");
+									}
+
+								}
+								if (af.getDado() instanceof EDados2) {
+									// decisao de parar medicao de hemoglob ou continuar medicao e aplicar remedio
+									if (((af.getQuantidade1() >= 14) && (af.getQuantidade1() <= 18))) {
+
+										TarefaCentralizador tarefa = new TarefaCentralizador();
+										tarefa.setAcao(new EApply2()); // Cessar Liberacao
+										Medicamento medicamento = new Medicamento();
+										medicamento.setRemedio(new ERemedy1()); // dipirona
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+
+										TarefaCentralizador tarefa2 = new TarefaCentralizador();
+										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
+										tarefa2.setDados(new EData2()); // "Hemoglobina"
+										sendMessageToAgent( tarefa2.prettyPrinterTarefa(), "monitor" + indexCurrentAgent);
+
+										
+									} else {
+										
+										TarefaCentralizador tarefa = new TarefaCentralizador();
+										tarefa.setAcao(new EApply1());
+										Medicamento medicamento = new Medicamento();
+										medicamento.setQuantidade(15);
+										medicamento.setRemedio(new ERemedy1());
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+																				// System.out.println(getLocalName() ": " + sender.getLocalName() + " esta com hemoglobina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
+									}
+
+								}
+								if (af.getDado() instanceof EDados1) { 
+									// Dcisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio
+									if (((af.getQuantidade1() >= 0) && (af.getQuantidade1() < 8))) {
+										TarefaCentralizador tarefa = new TarefaCentralizador();
+										tarefa.setAcao(new EApply2()); // Cessar Liberacao
+										Medicamento medicamento = new Medicamento();
+										medicamento.setRemedio(new ERemedy2()); // parcetamol
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+
+										TarefaCentralizador tarefa2 = new TarefaCentralizador();
+										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
+										tarefa2.setDados(new EData3());// bilirrubina
+										sendMessageToAgent( tarefa2.prettyPrinterTarefa(), "monitor" + indexCurrentAgent);
+
+										// System.out.println(getLocalName() + ": " + sender.getLocalName() + " bilirrubina boa, nao precisa remedio.NAO IMPLEMENTADO\n");
+									} else {
+										// bilirrubina
+										TarefaCentralizador tarefa = new TarefaCentralizador();
+										tarefa.setAcao(new EApply1());
+										Medicamento medicamento = new Medicamento();
+										medicamento.setQuantidade(20);
+										medicamento.setRemedio(new ERemedy2());
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+										
+										// System.out.println(getLocalName() +
+										// ": " + sender.getLocalName() +
+										// " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
+									}
+
+								}
+								if (af.getDado() instanceof EDados3) {
+									// Decisao de parar medicao de Pressao arterial ou continuar medicao e aplicar remedio
+									if (((af.getQuantidade1() >= 100) && (af.getQuantidade1() <= 140)) &&
+										((af.getQuantidade2() >= 60) && (af.getQuantidade2() <= 90))){
+//										System.out.println(getLocalName() + ": " + sender.getLocalName() + " pressao arterial boa, nao precisa remedio.NAO IMPLEMENTADO");
+										TarefaCentralizador tarefa = new TarefaCentralizador();
+										tarefa.setAcao(new EApply2()); // Cessar Liberacao
+										Medicamento medicamento = new Medicamento();
+										medicamento.setRemedio(new ERemedy2()); // parcetamol
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+
+										TarefaCentralizador tarefa2 = new TarefaCentralizador();
+										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
+										tarefa2.setDados(new EData4());// Pressao Arterial
+										sendMessageToAgent( tarefa2.prettyPrinterTarefa(), "monitor" + indexCurrentAgent);										
+										// System.out.println(getLocalName() + ": " + sender.getLocalName() + "Pressao Arterial boa, nao precisa remedio.NAO IMPLEMENTADO\n");
+									} else {
+										
+										TarefaCentralizador tarefa = new TarefaCentralizador();
+										tarefa.setAcao(new EApply1());
+										Medicamento medicamento = new Medicamento();
+										medicamento.setQuantidade(20);
+										medicamento.setRemedio(new ERemedy2());
+										tarefa.setMedicacao(medicamento);
+										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+										// System.out.println(getLocalName()  ": " + sender.getLocalName() + " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
+									}
+
+								}
+
+								// TODO @MARCO 6 - Implementar decisao de parar
+								// medicao de pressao art ou continuar medicao e
+								// aplicar remedio
+
 							}
-						} catch (Exception e){
+						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
-					}
-					else if (atuador.contains(sender))
-						System.out.println(getLocalName() + ": Msg recebida do " + msg.getSender().getLocalName() + " -->" + msg.getContent());
+					} else if (atuador.contains(sender))
+						System.out.println(getLocalName()
+								+ ": Msg recebida do "
+								+ msg.getSender().getLocalName() + " -->"
+								+ msg.getContent());
 					else {// ERRO
-						System.out.println(getLocalName() + ": " + sender.getLocalName() + ", " + msg.getContent());
+						System.out.println(getLocalName() + ": "
+								+ sender.getLocalName() + ", "
+								+ msg.getContent());
 					}
-//					System.out.println("**********************");
-//					System.out.println();
+					// System.out.println("**********************");
+					// System.out.println();
 				}
 
 			}

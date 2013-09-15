@@ -61,7 +61,7 @@ public class AgenteAtuador extends Agent {
 						try {
 							TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
 							if (tc.getAcao() instanceof EApply1) {
-								System.out.print(getLocalName() + ": Liberando Remedio");
+								System.out.print(getLocalName() + ": Liberar Remedio");
 								List<Medicamento> med = tc.getMedicacao();
 								for (Medicamento m : med) {
 									if (m.remedio instanceof ERemedy1) {
@@ -83,7 +83,7 @@ public class AgenteAtuador extends Agent {
 									} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
 								}
 							} else if (tc.getAcao() instanceof EApply2) {
-								System.out.print("Monitor: Parando medicao");
+								System.out.print(getLocalName() + ": Cessar Liberacao");;
 								List<Medicamento> med = tc.getMedicacao();
 								for (Medicamento m : med) {
 									if (m.remedio instanceof ERemedy1) {
@@ -91,20 +91,22 @@ public class AgenteAtuador extends Agent {
 										if (isDipironaRunning) {
 											removeBehaviour(checkDipirona);
 										} else
-											System.out.println(getLocalName() + " nao esta monitorando Dipirona.");
+											System.out.println(getLocalName() + " nao esta liberando Dipirona.");
 									} else if (m.remedio instanceof ERemedy2) {
 										System.out.println(" Paracetamol");
 										if (isParacetamolRunning) {
 											removeBehaviour(checkParacetamol);
 										} else
-											System.out.println(getLocalName() + " nao esta monitorando Paracetamol.");
+											System.out.println(getLocalName() + " nao esta liberando Paracetamol.");
 									}
 								}
 
-							} if (tc.getAcao() instanceof EAction3) {
+							} else
+								if (tc.getAcao() instanceof EAction3) {
 								System.out.println(getLocalName() + " : Mensagem de autodestruicao recebida.");
 								this.myAgent.doDelete();
-							} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
+							} else 
+								System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
