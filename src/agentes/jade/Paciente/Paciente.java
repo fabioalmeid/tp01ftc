@@ -10,13 +10,13 @@ public class Paciente {
 	private final static int MIN_BILI = 0;
 	private final static int MAX_BILI = 14;
 	
-	private static Integer temperatura = 38;
+	private static Integer temperatura = 39;
 	private static Boolean remedioTemp = false;
 	
-	private static Integer hemoglobina = 13;
+	private static Integer hemoglobina = 8;
 	private static Boolean remedioHemoglobina = false;
 	
-	private static Integer bilirrubina = 3;
+	private static Integer bilirrubina = 9;
 	private static Boolean remedioBilirrubuna = false;
 	
 	private static Boolean remedioPressao = false;

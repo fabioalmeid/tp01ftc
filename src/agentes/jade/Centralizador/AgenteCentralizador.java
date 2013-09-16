@@ -39,7 +39,7 @@ public class AgenteCentralizador extends Agent {
 	private final static int MIN_HEMO_BOA = 14;
 	private final static int MAX_HEMO_BOA = 18;
 	private final static int MIN_BILI_BOA = 0;
-	private final static int MAX_BILI_BOA = 8;
+	private final static int MAX_BILI_BOA = 5;
 	
 	private static final int INTERVALO_REQUISICAO = 8000;
 	private final int AGENTSNUMBER = 1;

@@ -61,48 +61,53 @@ public class AgenteAtuador extends Agent {
 						try {
 							TarefaCentralizador tc = GrammarParserCentralizador.getCentralizadorMessageObject(mensagem);
 							if (tc.getAcao() instanceof EApply1) {
-								System.out.print(getLocalName() + ": Liberar Remedio");
+								StringBuilder temp = new StringBuilder();
+								temp.append(getLocalName() + ": Liberar Remedio");
 								List<Medicamento> med = tc.getMedicacao();
 								for (Medicamento m : med) {
 									if (m.remedio instanceof ERemedy1) {
-										System.out.println(" Dipirona");
-										if (!isDipironaRunning) {
+										temp.append(" Dipirona");
+										System.out.println(temp.toString());
+										//if (!isDipironaRunning) {
 											checkDipirona = new ApplyDipironaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkDipirona);
 											isDipironaRunning = true;
-										} else
-											System.out.println(getLocalName() + " ja esta liberando Dipirona.");
+										//} else
+											//System.out.println(getLocalName() + " ja esta liberando Dipirona.");
 									} else if (m.remedio instanceof ERemedy2) {
-										System.out.println(" Paracetamol");
-										if (!isParacetamolRunning) {
+										temp.append(" Paracetamol");
+										System.out.println(temp.toString());
+										//if (!isParacetamolRunning) {
 											checkParacetamol = new ApplyParacetamolBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkParacetamol);
 											isParacetamolRunning = true;
-										} else
-											System.out.println(getLocalName() + " ja esta liberando Paracetamol.");
+										//} else
+											//System.out.println(getLocalName() + " ja esta liberando Paracetamol.");
 									} else System.out.println(getLocalName() + ": Comando invalido para atuador : " + mensagem);
 								}
 							} else if (tc.getAcao() instanceof EApply2) {
-								System.out.print(getLocalName() + ": Cessar Liberacao");;
+								StringBuilder temp = new StringBuilder();
+								temp.append(getLocalName() + ": Cessar Liberacao");
 								List<Medicamento> med = tc.getMedicacao();
 								for (Medicamento m : med) {
 									if (m.remedio instanceof ERemedy1) {
-										System.out.println(" Dipirona");
-										if (isDipironaRunning) {
+										temp.append(" Dipirona");
+										System.out.println(temp.toString());
+										//if (isDipironaRunning) {
 											removeBehaviour(checkDipirona);
-										} else
-											System.out.println(getLocalName() + " nao esta liberando Dipirona.");
+										//} else
+											//System.out.println(getLocalName() + " nao esta liberando Dipirona.");
 									} else if (m.remedio instanceof ERemedy2) {
-										System.out.println(" Paracetamol");
-										if (isParacetamolRunning) {
+										temp.append(" Paracetamol");
+										System.out.println(temp.toString());
+										//if (isParacetamolRunning) {
 											removeBehaviour(checkParacetamol);
-										} else
-											System.out.println(getLocalName() + " nao esta liberando Paracetamol.");
+										//} else
+											//System.out.println(getLocalName() + " nao esta liberando Paracetamol.");
 									}
 								}
 
-							} else
-								if (tc.getAcao() instanceof EAction3) {
+							} else if (tc.getAcao() instanceof EAction3) {
 								System.out.println(getLocalName() + " : Mensagem de autodestruicao recebida.");
 								this.myAgent.doDelete();
 							} else 
