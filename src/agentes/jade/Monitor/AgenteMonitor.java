@@ -73,36 +73,36 @@ public class AgenteMonitor extends Agent {
 								for (Object o : dados) {
 									if (o instanceof EData1) { // TEMPERATURE
 										//System.out.print(" Temperatura");
-										if (!isTempRunning) {
+										//if (!isTempRunning) {
 											checkTemperature = new InformTempBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkTemperature);
 											isTempRunning = true;
-										} else
-											System.out.print(getLocalName() + " ja esta monitorando temperatura.");
+										//} else
+											//System.out.print(getLocalName() + " ja esta monitorando temperatura.\n");
 									} else if (o instanceof EData2) { // HEMOGLOBINA
 										//System.out.print(" Hemoglobina");
-										if (!isHemoglobinaRunning) {
+										//if (!isHemoglobinaRunning) {
 											checkHemoglobina = new InformHemoglobinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkHemoglobina);
 											isHemoglobinaRunning = true;
-										} else
-											System.out.print(getLocalName() + " ja esta monitorando Hemoglobina.");
+										//} else
+											//System.out.print(getLocalName() + " ja esta monitorando Hemoglobina.\n");
 									} else if (o instanceof EData3) { // BILIRRUBINA
 										//System.out.print(" Bilirrubina");
-										if (!isBilirrubinaRunning) {
+										//if (!isBilirrubinaRunning) {
 											checkBilirrubina = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkBilirrubina);
 											isBilirrubinaRunning = true;
-										} else
-											System.out.println(getLocalName() + " ja esta monitorando Bilirrubina.");
+										//} else
+											//System.out.println(getLocalName() + " ja esta monitorando Bilirrubina.\n");
 									} else if (o instanceof EData4) { // PRESSAO ARTERIAL
 										//System.out.print(" Pressao Arterial");
-										if (!isBloodPressureRunning) {
+										//if (!isBloodPressureRunning) {
 											checkBloodPressure = new InformBilirrubinaBehaviour(myAgent, ACLmsg);
 											addBehaviour(checkBloodPressure);
 											isBloodPressureRunning = true;
-										} else
-											System.out .println(getLocalName() + " ja esta monitorando Pressao Arterial.");
+										//} else
+											//System.out .println(getLocalName() + " ja esta monitorando Pressao Arterial.\n");
 									}
 								} //System.out.println("");
 							} else if (tc.getAcao() instanceof ECollect2) {
@@ -111,28 +111,28 @@ public class AgenteMonitor extends Agent {
 								for (Object o : dados) {
 									if (o instanceof EData1) {
 										//System.out.print(" Temperatura\n");
-										if (isTempRunning) {
+										//if (isTempRunning) {
 											removeBehaviour(checkTemperature);
-										} else
-											System.out.println(getLocalName() + " nao esta monitorando Temperatura.");
+										//} else
+											//System.out.println(getLocalName() + " nao esta monitorando Temperatura.");
 									} else if (o instanceof EData2) {
 										//System.out.print(" Hemoglobina\n");
-										if (isHemoglobinaRunning) {
+										//if (isHemoglobinaRunning) {
 											removeBehaviour(checkHemoglobina);
-										} else
-											System.out.println(getLocalName() + " nao esta monitorando Hemoglobina.");
+										//} else
+											//System.out.println(getLocalName() + " nao esta monitorando Hemoglobina.");
 									} else if (o instanceof EData3) {
 										//System.out.print(" bilirrubina\n");
-										if (isBilirrubinaRunning) {
+										//if (isBilirrubinaRunning) {
 											removeBehaviour(checkBilirrubina);
-										} else
-											System.out.println(getLocalName() + " nao esta monitorando Bilirrubina.");
+										//} else
+											//System.out.println(getLocalName() + " nao esta monitorando Bilirrubina.");
 									} else if (o instanceof EData4) {
 										//System.out.print(" Pressao Arterial\n");
-										if (isBloodPressureRunning) {
+										//if (isBloodPressureRunning) {
 											removeBehaviour(checkBloodPressure);
-										} else
-											System.out.println(getLocalName() + " nao esta monitorando Pressao Arterial.");
+										//} else
+											//System.out.println(getLocalName() + " nao esta monitorando Pressao Arterial.");
 									}
 								}
 

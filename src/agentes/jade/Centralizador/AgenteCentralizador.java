@@ -32,26 +32,19 @@ import agentes.jade.Monitor.TarefaMonitor;
 
 public class AgenteCentralizador extends Agent {
 	private static final int INICIO_FEBRE = 38;
-	private static final int MIN_PRESSAO_DIAS = 50;
-	private static final int MIN_PRESSAO_SIST = 90;
-	private static final int MAX_PRESSAO_DIAS = 130;
-	private static final int MAX_PRESSAO_SIST = 200;
-	private final static int MIN_TEMP = 35;
-	private final static int MAX_TEMP = 40;
-	private final static int MIN_HEMO = 9;
-	private final static int MAX_HEMO = 23;
-	private final static int MIN_BILI = 0;
-	private final static int MAX_BILI = 14;
-	
-	int cont ;
-	
-
-	
+	private static final int MIN_PRESSAO_DIAS_BOA = 60;
+	private static final int MIN_PRESSAO_SIST_BOA = 100;
+	private static final int MAX_PRESSAO_DIAS_BOA = 90;
+	private static final int MAX_PRESSAO_SIST_BOA = 140;
+	private final static int MIN_HEMO_BOA = 14;
+	private final static int MAX_HEMO_BOA = 18;
+	private final static int MIN_BILI_BOA = 0;
+	private final static int MAX_BILI_BOA = 8;
 	
 	private static final int INTERVALO_REQUISICAO = 8000;
 	private final int AGENTSNUMBER = 1;
 	
-	private boolean[] atuadorIsBusy = new boolean[AGENTSNUMBER];
+	private AtuadorBusyControl atuadorIsBusy[] = new AtuadorBusyControl[AGENTSNUMBER];
 	
 	private List<AID> monitor;
 	private List<AID> atuador;
@@ -84,6 +77,8 @@ public class AgenteCentralizador extends Agent {
 			// create ATUADOR
 			atuadorName = "atuador" + Integer.toString(i);
 			CreatNewAgent(container, atuadorName, "agentes.jade.Atuador.AgenteAtuador");
+			AtuadorBusyControl _atuador = new AtuadorBusyControl();
+			atuadorIsBusy[i] = _atuador;
 		}
 		
 		CreatNewAgent(container, "paciente", "agentes.jade.Paciente.AgentePaciente");
@@ -93,25 +88,8 @@ public class AgenteCentralizador extends Agent {
 			protected void onTick() {
 				// manda para algum monitor uma mensagem aleatoria
 				int indexMsg = (int) (Math.random() * (AGENTSNUMBER));
-				// TODO @MARCO 1 - Remover o envio aleatório de mensagem. O centralizador deve de tempo em tempo mandar medir algo (temp ou pressao ou bilirrubina ou etc....)
-				// TODO @MARCO 2 - Baseado na leitura dos dados decidir se para medicao ou se continua medicao e aplica remedio
 				sendMessageToAgent(GeradorAleatorioMsg.getRandomStartMeasure(), "monitor" + indexMsg);
-//				sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToMonitor(), "monitor" + indexMsg);
-//				if(cont == 0){
-//					sendMessageToAgent("Iniciar Medicao de Pressao Arterial", "monitor" + indexMsg);
-//				}
-//					cont++;
-//				sendMessageToAgent("Iniciar Medicao Hemoglobina", "monitor" + indexMsg);
-//				sendMessageToAgent("Iniciar Medicao bilirrubina", "monitor" + indexMsg);
-//				sendMessageToAgent("Iniciar Medicao Temperatura e Hemoglobina", "monitor" + indexMsg);
-//				sendMessageToAgent("Iniciar Medicao Hemoglobina e bilirrubina e Temperatura", "monitor" + indexMsg);
-//				sendMessageToAgent("Parar medicao Temperatura", "monitor" + indexMsg);
-//				sendMessageToAgent("Parar medicao bilirrubina", "monitor" + indexMsg);
-//				sendMessageToAgent("Parar medicao Temperatura e bilirrubina", "monitor" + indexMsg);
-				
-		
-				//sendMessageToAgent(GeradorAleatorioMsg.getRandomMessageCentralizadorToAtuador(), "atuador" + indexMsg);
-				
+							
 				monitor = UpdateAgentList.getAgentUpdatedList("monitor", myAgent);
 //				System.out.print(getLocalName() + ": Achei os seguintes monitores:");
 //				for (AID m : monitor) {
@@ -140,10 +118,9 @@ public class AgenteCentralizador extends Agent {
 
 					// se o sender for monitor
 					if (monitor.contains(sender)) {
-						System.out.println(getLocalName() + ": " + msg.getSender().getLocalName() + " respondeu " + msg.getContent());
-						// System.out.println(getLocalName() + ": Msg recebida do monitor " + msg.getSender().getLocalName() + " -->" + msg.getContent());
-						// valida mensagem
-						TarefaMonitor tm = new TarefaMonitor();
+						//System.out.println(getLocalName() + ": " + msg.getSender().getLocalName() + " respondeu " + msg.getContent());
+
+						TarefaMonitor tm = new TarefaMonitor();						// valida mensagem
 						try {
 							tm = GrammarParserMonitor.getMonitorMessageObject(msg.getContent());
 							List<Afericao> afericoes = tm.getAfericoes();
@@ -153,72 +130,105 @@ public class AgenteCentralizador extends Agent {
 							for (Afericao af : afericoes) {
 								if (af.getDado() instanceof EDados) { 
 									//  Decisao de parar medicao de temp ou continuar medicao e aplicar remedio
-
 									if (af.getQuantidade1() > INICIO_FEBRE) {
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply1());
-										Medicamento medicamento = new Medicamento();
-										medicamento.setQuantidade(15);
-										medicamento.setRemedio(new ERemedy1()); // dipirona
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
-										// System.out.println(getLocalName() +": " + sender.getLocalName()+" esta com febre, devo aplicar remedio.NAO IMPLEMENTADO");
-									} else {
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply2()); // Cessar Liberacao
-										Medicamento medicamento = new Medicamento();
-										medicamento.setRemedio(new ERemedy1()); // dipirona
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+										if (!atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyDipirona()) {
+											StringBuilder temp = new StringBuilder();
+											temp.append(getLocalName() + ": Temperatura ruim, " + String.valueOf(af.getQuantidade1()) + " C.");
+											temp.append(getReferenceValue("temperatura"));
+											temp.append(". Aplicando remedio.");
+											System.out.println(temp.toString());
+											
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply1()); // aplica
+											Medicamento medicamento = new Medicamento();
+											medicamento.setQuantidade(15);
+											medicamento.setRemedio(new ERemedy1()); // dipirona
+											tarefa.setMedicacao(medicamento);
+											sendMessageToAgent(tarefa.prettyPrinterTarefa(),"atuador" + indexCurrentAgent);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyDipirona(true);
+										}
+									} else { // para liberacao de medicação caso esteja aplicando
+										StringBuilder temp = new StringBuilder();
+										temp.append(getLocalName() + ": Temperatura boa, " + String.valueOf(af.getQuantidade1()) + " C.");
+										temp.append(getReferenceValue("temperatura"));
+										System.out.println(temp.toString());
+										
+										if (atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyDipirona()) {
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply2()); // Cessar Liberacao
+											Medicamento medicamento = new Medicamento();
+											medicamento.setRemedio(new ERemedy1()); // dipirona
+											tarefa.setMedicacao(medicamento);
+											sendMessageToAgent(tarefa.prettyPrinterTarefa(),"atuador" + indexCurrentAgent);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyDipirona(false);
+										}
 
 										TarefaCentralizador tarefa2 = new TarefaCentralizador();
 										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
 										tarefa2.setDados(new EData1()); // "Temperatura"
-										sendMessageToAgent( tarefa2.prettyPrinterTarefa(), "monitor" + indexCurrentAgent);
-										// System.out.println(getLocalName() + ": " + sender.getLocalName() + " tem temperatura boa, nao precisa remedio.NAO IMPLEMENTADO");
+										sendMessageToAgent(tarefa2.prettyPrinterTarefa(),"monitor" + indexCurrentAgent);
 									}
-
 								}
 								if (af.getDado() instanceof EDados2) {
-									// decisao de parar medicao de hemoglob ou continuar medicao e aplicar remedio
-									if (((af.getQuantidade1() >= 14) && (af.getQuantidade1() <= 18))) {
-
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply2()); // Cessar Liberacao
-										Medicamento medicamento = new Medicamento();
-										medicamento.setRemedio(new ERemedy1()); // dipirona
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
-
+									// para aplicacao de dipirona caso esteja aplicando
+									if (((af.getQuantidade1() >= MIN_HEMO_BOA) && (af.getQuantidade1() <= MAX_HEMO_BOA))) {
+										StringBuilder temp = new StringBuilder();
+										temp.append(getLocalName() + ": Hemoglobina boa, " + String.valueOf(af.getQuantidade1()) + " mg/dL");
+										temp.append(getReferenceValue("hemoglobina"));
+										System.out.println(temp.toString());
+										
+										if (atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyDipirona()) {
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply2()); // Cessar Liberacao
+											Medicamento medicamento = new Medicamento();
+											medicamento.setRemedio(new ERemedy1()); // dipirona
+											tarefa.setMedicacao(medicamento);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyDipirona(false);
+											sendMessageToAgent(tarefa.prettyPrinterTarefa(),"atuador" + indexCurrentAgent);
+										}
+										
 										TarefaCentralizador tarefa2 = new TarefaCentralizador();
 										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
 										tarefa2.setDados(new EData2()); // "Hemoglobina"
 										sendMessageToAgent( tarefa2.prettyPrinterTarefa(), "monitor" + indexCurrentAgent);
-
-										
-									} else {
-										
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply1());
-										Medicamento medicamento = new Medicamento();
-										medicamento.setQuantidade(15);
-										medicamento.setRemedio(new ERemedy1());
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
-																				// System.out.println(getLocalName() ": " + sender.getLocalName() + " esta com hemoglobina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
+									} else { //se nao estou aplicando, entao aplica remedio
+										if (!atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyDipirona()) {
+											StringBuilder temp = new StringBuilder();
+											temp.append(getLocalName() + ": Hemoglobina ruim , " + String.valueOf(af.getQuantidade1()) + " mg/dL");
+											temp.append(getReferenceValue("hemoglobina"));
+											temp.append(". Aplicando remedio.");
+											System.out.println(temp.toString());
+											
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply1());
+											Medicamento medicamento = new Medicamento();
+											medicamento.setQuantidade(15);
+											medicamento.setRemedio(new ERemedy1());
+											tarefa.setMedicacao(medicamento);
+											sendMessageToAgent(tarefa.prettyPrinterTarefa(),"atuador" + indexCurrentAgent);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyDipirona(true);
+										}
 									}
 
 								}
 								if (af.getDado() instanceof EDados1) { 
-									// Dcisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio
-									if (((af.getQuantidade1() >= 0) && (af.getQuantidade1() < 8))) {
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply2()); // Cessar Liberacao
-										Medicamento medicamento = new Medicamento();
-										medicamento.setRemedio(new ERemedy2()); // parcetamol
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
-
+									// Decisao de parar medicao de bilirrubina ou continuar medicao e aplicar remedio
+									if (((af.getQuantidade1() >= MIN_BILI_BOA) && (af.getQuantidade1() < MAX_BILI_BOA))) {
+										StringBuilder temp = new StringBuilder();
+										temp.append(getLocalName() + ": Bilirrubina boa, " + String.valueOf(af.getQuantidade1()) + " g/dL");
+										temp.append(getReferenceValue("bilirrubina"));
+										System.out.println(temp.toString());
+										
+										if (atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyParacetamol()) {
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply2()); // Cessar Liberacao
+											Medicamento medicamento = new Medicamento();
+											medicamento.setRemedio(new ERemedy2()); // parcetamol
+											tarefa.setMedicacao(medicamento);
+											sendMessageToAgent(tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyParacetamol(false);
+										}
+										
 										TarefaCentralizador tarefa2 = new TarefaCentralizador();
 										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
 										tarefa2.setDados(new EData3());// bilirrubina
@@ -226,59 +236,74 @@ public class AgenteCentralizador extends Agent {
 
 										// System.out.println(getLocalName() + ": " + sender.getLocalName() + " bilirrubina boa, nao precisa remedio.NAO IMPLEMENTADO\n");
 									} else {
-										// bilirrubina
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply1());
-										Medicamento medicamento = new Medicamento();
-										medicamento.setQuantidade(20);
-										medicamento.setRemedio(new ERemedy2());
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
-										
-										// System.out.println(getLocalName() +
-										// ": " + sender.getLocalName() +
-										// " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
+										// Bilirrubina ruim, se nao estou aplicando remedio, entao aplica
+										if (!atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyParacetamol()) {
+											StringBuilder temp = new StringBuilder();
+											temp.append(getLocalName() + ": Bilirrubina ruim, " + String.valueOf(af.getQuantidade1()) + " g/dL");
+											temp.append(getReferenceValue("bilirrubina"));
+											temp.append(". Aplicando remedio.");
+											System.out.println(temp.toString());
+											
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply1());
+											Medicamento medicamento = new Medicamento();
+											medicamento.setQuantidade(20);
+											medicamento.setRemedio(new ERemedy2());
+											tarefa.setMedicacao(medicamento);
+											sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyParacetamol(true);
+										}
 									}
 
 								}
 								if (af.getDado() instanceof EDados3) {
 									// Decisao de parar medicao de Pressao arterial ou continuar medicao e aplicar remedio
-									if (((af.getQuantidade1() >= 100) && (af.getQuantidade1() <= 140)) &&
-										((af.getQuantidade2() >= 60) && (af.getQuantidade2() <= 90))){
-//										System.out.println(getLocalName() + ": " + sender.getLocalName() + " pressao arterial boa, nao precisa remedio.NAO IMPLEMENTADO");
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply2()); // Cessar Liberacao
-										Medicamento medicamento = new Medicamento();
-										medicamento.setRemedio(new ERemedy2()); // parcetamol
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
-
+									if (((af.getQuantidade1() >= MIN_PRESSAO_SIST_BOA) && (af.getQuantidade1() <= MAX_PRESSAO_SIST_BOA)) &&
+										((af.getQuantidade2() >= MIN_PRESSAO_DIAS_BOA) && (af.getQuantidade2() <= MAX_PRESSAO_DIAS_BOA))){
+										StringBuilder temp = new StringBuilder();
+										temp.append(getLocalName() + ": Pressao arterial boa, Sist -> " + String.valueOf(af.getQuantidade1()) + 
+												" Diast -> " + String.valueOf(af.getQuantidade2()));
+										temp.append(getReferenceValue("pressao"));
+										System.out.println(temp.toString());
+										
+										if (atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyParacetamol()) {
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply2()); // Cessar Liberacao
+											Medicamento medicamento = new Medicamento();
+											medicamento.setRemedio(new ERemedy2()); // parcetamol
+											tarefa.setMedicacao(medicamento);
+											sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyParacetamol(false);
+										}
+										
 										TarefaCentralizador tarefa2 = new TarefaCentralizador();
 										tarefa2.setAcao(new ECollect2()); // "Parar medicao"
 										tarefa2.setDados(new EData4());// Pressao Arterial
 										sendMessageToAgent( tarefa2.prettyPrinterTarefa(), "monitor" + indexCurrentAgent);										
-										// System.out.println(getLocalName() + ": " + sender.getLocalName() + "Pressao Arterial boa, nao precisa remedio.NAO IMPLEMENTADO\n");
-									} else {
-										
-										TarefaCentralizador tarefa = new TarefaCentralizador();
-										tarefa.setAcao(new EApply1());
-										Medicamento medicamento = new Medicamento();
-										medicamento.setQuantidade(20);
-										medicamento.setRemedio(new ERemedy2());
-										tarefa.setMedicacao(medicamento);
-										sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
-										// System.out.println(getLocalName()  ": " + sender.getLocalName() + " esta com bilirrubina ruim, devo aplicar remedio.NAO IMPLEMENTADO");
+									} else { //se nao estou aplicando remedio, entao aplica
+										if (!atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].getApplyParacetamol()) {
+											StringBuilder temp = new StringBuilder();
+											temp.append(getLocalName() + ": Pressao arterial ruim, Sist -> " + String.valueOf(af.getQuantidade1()) + 
+													" Diast -> " + String.valueOf(af.getQuantidade2()));
+											temp.append(getReferenceValue("pressao"));
+											temp.append(". Aplicando remedio.");
+											System.out.println(temp.toString());
+											
+											TarefaCentralizador tarefa = new TarefaCentralizador();
+											tarefa.setAcao(new EApply1());
+											Medicamento medicamento = new Medicamento();
+											medicamento.setQuantidade(20);
+											medicamento.setRemedio(new ERemedy2());
+											tarefa.setMedicacao(medicamento);
+											sendMessageToAgent( tarefa.prettyPrinterTarefa(), "atuador" + indexCurrentAgent);
+											atuadorIsBusy[Integer.parseInt(indexCurrentAgent)].setApplyParacetamol(true);
+										}
 									}
 
 								}
-
-								// TODO @MARCO 6 - Implementar decisao de parar
-								// medicao de pressao art ou continuar medicao e
-								// aplicar remedio
-
 							}
 						} catch (Exception e) {
-							System.out.println(e.getMessage());
+							System.out.println(getLocalName() + ". Erro ao ler resposta do monitor: " + e.getMessage());
 						}
 					} else if (atuador.contains(sender))
 						System.out.println(getLocalName()
@@ -318,5 +343,23 @@ public class AgenteCentralizador extends Agent {
 		System.out.println(getLocalName() + ": " + receiver.getLocalName() + ", " + message.getContent());
 		//System.out.println(getLocalName() + "para " + agentName + " : " + mensagem);
 		send(message);
+	}
+	
+	private String getReferenceValue(String tipo){
+		StringBuilder result = new StringBuilder();
+		result.append(". Valor de referencia: ");
+		if (tipo == "temperatura")
+			result.append("35<T<" + String.valueOf(INICIO_FEBRE));
+		else if (tipo == "hemoglobina")
+			result.append(String.valueOf(MIN_HEMO_BOA) + "<H<" + String.valueOf(MAX_HEMO_BOA));
+		else if (tipo == "bilirrubina")
+			result.append(String.valueOf(MIN_BILI_BOA) + "<B<" + String.valueOf(MAX_BILI_BOA));
+		else if (tipo == "pressao") {
+			result.append("Sist -> " + String.valueOf(MIN_PRESSAO_SIST_BOA) + "<SIST<" + String.valueOf(MAX_PRESSAO_SIST_BOA));
+			result.append(". Diast -> " + String.valueOf(MIN_PRESSAO_DIAS_BOA) + "<DIAST<" + String.valueOf(MAX_PRESSAO_DIAS_BOA));
+			}
+		else System.out.println("Erro. Tipo desconhecido: " + tipo);
+		
+		return result.toString();
 	}
 }
